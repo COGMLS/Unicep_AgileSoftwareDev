@@ -7,4 +7,10 @@
     <RootNamespace>AutoStartupConsole</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AutoStartLib\AutoStartLib.csproj" />
+    <ProjectReference Include="..\ConfigLib\ConfigLib.csproj" />
+    <ProjectReference Include="..\ProfilesLib\ProfilesLib.csproj" />
+  </ItemGroup>
+
 </Project>
