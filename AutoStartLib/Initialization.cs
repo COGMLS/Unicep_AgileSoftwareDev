@@ -74,15 +74,27 @@ namespace AutoStartLib
 		}
 
 		//Organize List by Priority
-		void SortList()
+		private void SortList()
 		{
 			SortClass.Sort(ref this.HStartList);
 		}
 
 		//Load and Save Init List:
-		int LoadInitList()
+		public int LoadInitList(ref CommonTypes.ImportList[] ImportS)
 		{
-			return 0;
+			if(ImportS != null || ImportS.Length <= this.HStartList.Length)
+            {
+				for(int i = 0; i < this.HStartList.Length; i++)
+                {
+					this.HStartList[i].SetProgramName("");
+                }
+
+				return 0;
+            }
+			else
+            {
+				return -1;
+            }
 		}
 
 		//
