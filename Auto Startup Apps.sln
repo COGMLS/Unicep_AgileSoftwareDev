@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoStartLib", "AutoStartLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigLib", "ConfigLib\ConfigLib.csproj", "{B12D3B1A-A880-4AEB-BB3B-CC4EB80FED7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfilesLib", "ProfilesLib\ProfilesLib.csproj", "{346C9014-9C7A-4EC4-8B1D-976CEBACE0F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfilesLib", "ProfilesLib\ProfilesLib.csproj", "{346C9014-9C7A-4EC4-8B1D-976CEBACE0F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsLib", "MetricsLib\MetricsLib.csproj", "{5C7C4262-4291-42E9-8F20-8E9C4FF07411}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessAuxLib", "ProcessAuxLib\ProcessAuxLib.csproj", "{042C8C93-5B3E-4789-A215-454E8438B085}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{346C9014-9C7A-4EC4-8B1D-976CEBACE0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{346C9014-9C7A-4EC4-8B1D-976CEBACE0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{346C9014-9C7A-4EC4-8B1D-976CEBACE0F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C7C4262-4291-42E9-8F20-8E9C4FF07411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7C4262-4291-42E9-8F20-8E9C4FF07411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7C4262-4291-42E9-8F20-8E9C4FF07411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7C4262-4291-42E9-8F20-8E9C4FF07411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{042C8C93-5B3E-4789-A215-454E8438B085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{042C8C93-5B3E-4789-A215-454E8438B085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{042C8C93-5B3E-4789-A215-454E8438B085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{042C8C93-5B3E-4789-A215-454E8438B085}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
