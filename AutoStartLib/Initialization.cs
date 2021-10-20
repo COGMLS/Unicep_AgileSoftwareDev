@@ -11,6 +11,9 @@ namespace AutoStartLib
 		//Handle to a Initialization list:
 		StartApp[] HStartList = null;
 
+		//Index in use:
+		int HStartIndex;
+
 		//List controls:
 		int MaxSimultaneousInit = 0;
 
@@ -18,11 +21,13 @@ namespace AutoStartLib
 		public InitializationList(int itens)
 		{
 			this.HStartList = new StartApp[itens];
+			this.HStartIndex = 0;
 		}
 		public InitializationList(int itens, int SimInit)
 		{
 			this.HStartList = new StartApp[itens];
 			this.MaxSimultaneousInit = SimInit;
+			this.HStartIndex = 0;
 		}
 
 		//Size mng functions
@@ -79,7 +84,7 @@ namespace AutoStartLib
 			SortClass.Sort(ref this.HStartList);
 		}
 
-		//Load and Save Init List:
+		//Load Init List:
 		public int LoadInitList(ref CommonTypes.ImportList[] ImportS)
 		{
 			if(ImportS != null || ImportS.Length <= this.HStartList.Length)
@@ -97,6 +102,95 @@ namespace AutoStartLib
             }
 		}
 
-		//
+		//Save Init List:
+		public int SaveInitList()
+        {
+			return 0;
+        }
+
+		//Add a object to initialyze:
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime = 0)
+		{
+			if (this.HStartIndex + 1 < this.HStartList.Length)
+			{
+				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
+				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
+				this.HStartList[this.HStartIndex + 1].SetArgs(args);
+				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
+				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
+				this.HStartList[this.HStartIndex + 1].SetStartPriority(CommonTypes.StartPriority.NORMAL);
+
+				this.HStartIndex++;
+
+				return 0;
+			}
+			else
+            {
+				return -1;
+            }
+		}
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir)
+		{
+			if (this.HStartIndex + 1 < this.HStartList.Length)
+			{
+				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
+				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
+				this.HStartList[this.HStartIndex + 1].SetArgs(args);
+				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
+				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
+				this.HStartList[this.HStartIndex + 1].SetStartPriority(CommonTypes.StartPriority.NORMAL);
+				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
+
+				this.HStartIndex++;
+
+				return 0;
+			}
+			else
+            {
+				return -1;
+            }
+		}
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority)
+		{
+			if (this.HStartIndex + 1 < this.HStartList.Length)
+			{
+				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
+				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
+				this.HStartList[this.HStartIndex + 1].SetArgs(args);
+				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
+				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
+				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
+				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
+
+				this.HStartIndex++;
+
+				return 0;
+			}
+			else
+            {
+				return -1;
+            }
+		}
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
+		{
+			if (this.HStartIndex + 1 < this.HStartList.Length)
+			{
+				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
+				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
+				this.HStartList[this.HStartIndex + 1].SetArgs(args);
+				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
+				this.HStartList[this.HStartIndex + 1].SetWindowStyle(windowStyle);
+				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
+				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
+
+				this.HStartIndex++;
+
+				return 0;
+			}
+			else
+            {
+				return -1;
+            }
+		}
 	}
 }

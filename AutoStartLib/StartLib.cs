@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
+using MetricsLib;
+
 namespace AutoStartLib
 {
 	public enum StartWindowStyle
@@ -31,8 +33,8 @@ namespace AutoStartLib
 		CommonTypes.StartPriority Priority;
 
 		//Aplication Statistics:
-		float LastStartTime;
-		float StartTimeAverage;
+		float[] StartTimeHistory;
+		float StartTimeAverage = -1;
 
 		//Constructors:
 		StartApp()	//Empty constructor
@@ -148,6 +150,14 @@ namespace AutoStartLib
 			else
 			{
 				process.WindowStyle = ProcessWindowStyle.Normal;
+			}
+
+			this.StartTimeHistory = Metrics.LoadMetrics(this.ProgramName);
+
+			if (this.StartTimeHistory != null)
+			{
+				this.StartTimeAverage = Metrics.MetricsAvgTime(ref this.StartTimeHistory);
+
 			}
 		}
 

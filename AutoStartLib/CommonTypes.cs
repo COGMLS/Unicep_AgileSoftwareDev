@@ -31,7 +31,7 @@ namespace AutoStartLib
 			CommonTypes.StartPriority Priority;
 
 			//Aplication Statistics:
-			float LastStartTime;
+			float[] StartTimeHistory;
 			float StartTimeAverage;
 		}
 	}
