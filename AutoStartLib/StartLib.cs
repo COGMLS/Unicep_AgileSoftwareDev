@@ -14,27 +14,30 @@ namespace AutoStartLib
 		MAXIMIZED
 	}
 
-	class StartApp
+	public class StartApp
 	{
 		//Application basic info:
-		string ProgramName;
-		string CmdLine;
-		string Args;
-		string WorkingDir;
+		private string ProgramName;
+		private string CmdLine;
+		private string Args;
+		private string WorkingDir;
 
-		bool DefinedAdvancedOptions = false;
-		bool useShellEx;
-		bool createNoWindow;
+		private bool DefinedAdvancedOptions = false;
+		private bool useShellEx;
+		private bool createNoWindow;
 
 		StartWindowStyle windowStyle;
 
 		//Start method:
-		int WaitTime = 0;
-		CommonTypes.StartPriority Priority;
+		private int WaitTime = 0;
+		private CommonTypes.StartPriority Priority;
 
 		//Aplication Statistics:
-		float[] StartTimeHistory;
-		float StartTimeAverage = -1;
+		private float[] StartTimeHistory;
+		private float StartTimeAverage = -1;
+
+		//Application process obj:
+		ProcessStartInfo ObjProcess = null;
 
 		//Constructors:
 		StartApp()	//Empty constructor
@@ -95,6 +98,16 @@ namespace AutoStartLib
 
 			this.Priority = priority;
 		}
+		StartApp(string programName, string cmdLine, string args, int waitTime, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
+		{
+			this.ProgramName = programName;
+			this.CmdLine = cmdLine;
+			this.Args = args;
+
+			this.windowStyle = windowStyle;
+
+			this.Priority = priority;
+		}
 
 		//Getters:
 		public string GetProgramName() { return this.ProgramName; }
@@ -118,38 +131,38 @@ namespace AutoStartLib
 		//Prepare Start
 		private void PrepareStart()
 		{
-			ProcessStartInfo process = new ProcessStartInfo();
-			process.Arguments = this.Args;
-			process.FileName = this.CmdLine;
-			process.UseShellExecute = this.useShellEx;
-			process.WorkingDirectory = this.WorkingDir;
-			process.CreateNoWindow = this.createNoWindow;
+			this.ObjProcess = new ProcessStartInfo();
+			this.ObjProcess.Arguments = this.Args;
+			this.ObjProcess.FileName = this.CmdLine;
+			this.ObjProcess.UseShellExecute = this.useShellEx;
+			this.ObjProcess.WorkingDirectory = this.WorkingDir;
+			this.ObjProcess.CreateNoWindow = this.createNoWindow;
 
 			if(this.windowStyle == StartWindowStyle.NOWINDOW)
 			{
-				process.WindowStyle = ProcessWindowStyle.Hidden;
-				process.UseShellExecute = false;
+				this.ObjProcess.WindowStyle = ProcessWindowStyle.Hidden;
+				this.ObjProcess.UseShellExecute = false;
 			}
 			else if(this.windowStyle == StartWindowStyle.HIDDEN)
 			{
-				process.WindowStyle = ProcessWindowStyle.Hidden;
-				process.UseShellExecute = true;
+				this.ObjProcess.WindowStyle = ProcessWindowStyle.Hidden;
+				this.ObjProcess.UseShellExecute = true;
 			}
 			else if(this.windowStyle == StartWindowStyle.MAXIMIZED)
 			{
-				process.WindowStyle = ProcessWindowStyle.Maximized;
+				this.ObjProcess.WindowStyle = ProcessWindowStyle.Maximized;
 			}
 			else if(this.windowStyle == StartWindowStyle.MINIMIZED)
 			{
-				process.WindowStyle = ProcessWindowStyle.Minimized;
+				this.ObjProcess.WindowStyle = ProcessWindowStyle.Minimized;
 			}
 			else if(this.windowStyle == StartWindowStyle.NORMAL)
 			{
-				process.WindowStyle = ProcessWindowStyle.Normal;
+				this.ObjProcess.WindowStyle = ProcessWindowStyle.Normal;
 			}
 			else
 			{
-				process.WindowStyle = ProcessWindowStyle.Normal;
+				this.ObjProcess.WindowStyle = ProcessWindowStyle.Normal;
 			}
 
 			this.StartTimeHistory = Metrics.LoadMetrics(this.ProgramName);
