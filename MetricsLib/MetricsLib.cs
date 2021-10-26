@@ -12,9 +12,9 @@ namespace MetricsLib
 			MetricsStartTimeHistory = MetricsHistory;
 		}
 
-		float LastStartTime;
-		float StartTimeAverage;
-		float[] MetricsStartTimeHistory;
+		private float LastStartTime;
+		private float StartTimeAverage;
+		private float[] MetricsStartTimeHistory;
 
 		//Getters:
 		public float GetLastTime()
@@ -45,6 +45,7 @@ namespace MetricsLib
 		}
 	}
 
+	//Metrics class to load, save, update and calculates the metrics for the applications.
 	public static class Metrics
 	{
 		readonly static private string AutoStartAppsBase = "Auto Start Apps";
@@ -53,13 +54,18 @@ namespace MetricsLib
 		readonly static private string ProfileInternal_Init = "Init";
 		readonly static private string ProfileInternal_Estatistics = "PerfAnalyze";
 
+		//Contant value to limit the maximum length to keep.
+		const int MetricsLengthLimit = 30;
+
 		//Load the program metrics and returns a float array from the last 30 times.
 		public static float[] LoadMetrics(string ProgramMetrics)
 		{
+			//Receaves the loaded string array.
 			string[] MetricsTemp = LoadMetricFile(ref ProgramMetrics);
 
 			if (MetricsTemp != null)
 			{
+				//Creates a float array and converts the strings to floating points.
 				float[] MetricsF = new float[MetricsTemp.Length];
 
 				for (int i = 0; i < MetricsTemp.Length; i++)
@@ -81,6 +87,7 @@ namespace MetricsLib
 			string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 			string MetricsDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileInternal_Estatistics;
 
+			//Verify if exist the metrics file and load it to a string array.
 			if (File.Exists(MetricsDir + "\\" + ProgramMetrics))
 			{
 				string[] MetricsTemp = File.ReadAllLines(MetricsDir + "\\" + ProgramMetrics);
@@ -103,6 +110,7 @@ namespace MetricsLib
 
 				string[] MetricsStringFile = new string[Metrics.Length];
 
+				//Convert the float array to a string array
 				for (int i = 0; i < Metrics.Length; i++)
 				{
 					MetricsStringFile[i] = Metrics[i].ToString();
@@ -133,26 +141,36 @@ namespace MetricsLib
 		//Updates the metrics
 		public static void UpdateMetrics(ref float[] Metrics, float NewMetric)
 		{
-			//Updates the metrics history keeping the most recent in index 0
-			for(int i = 0; i < 30; i++)
-			{
-				//Verify if the history limit is respected with a maximum of 30 values and if the index limit is respected.
-				if (i < 30 && i < (Metrics.Length - 2))
-				{
-					//Move the data to the end.
-					Metrics[i + 1] = Metrics[i];
+			//Index variable, used to start from the end.
+			int i = Metrics.Length - 1;
 
+			//Verify if the Metrics array exceded the maximum length.
+			if(Metrics.Length > MetricsLengthLimit)
+            {
+				i = MetricsLengthLimit - 1;
+            }
+			
+			//Updates the metrics history keeping the most recent in index 0
+			for( ; i >= 0; i--)
+            {
+				//Verify if the history limit is respected with a maximum defined by MetricsLengthLimit constant value and if the index limit is respected.
+				if((i + 1 < MetricsLengthLimit) && (i + 1 < Metrics.Length) && i >= 0)
+                {
+					//Move the data forward.
+					Metrics[i + 1] = Metrics[i];
+					
 					//First move the data and after updates the index 0.
-					if (i == 0)
-					{
+					if(i == 0)
+                    {
 						Metrics[0] = NewMetric;
-					}
-				}
-				else
-				{
+                    }
+                }
+				else	//In case something goes wrong.
+                {
 					break;
-				}
-			}
+                }
+
+            }
 		}
 	}
 }
