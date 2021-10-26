@@ -1,6 +1,8 @@
-﻿using System;
+﻿//System Libs:
+using System;
 using System.Diagnostics;
 
+//App Libs:
 using MetricsLib;
 
 namespace AutoStartLib
@@ -22,7 +24,7 @@ namespace AutoStartLib
 		private string Args;
 		private string WorkingDir;
 
-		private bool DefinedAdvancedOptions = false;
+		private bool DefinedAdvancedOptions = false;	//Reserved for a future update.
 		private bool useShellEx;
 		private bool createNoWindow;
 
@@ -117,6 +119,8 @@ namespace AutoStartLib
 		public StartWindowStyle GetWindowStyle() { return this.windowStyle; }
 		public int GetWaitTime() { return this.WaitTime; }
 		public CommonTypes.StartPriority GetStartPriority() { return this.Priority; }
+		public float[] GetStartTimeHistory() { return this.StartTimeHistory; }
+		public float GetStartTimeAvg() { return this.StartTimeAverage; }
 
 		//Setters:
 		public void SetProgramName(string ProgramName) { this.ProgramName = ProgramName; }
@@ -126,7 +130,8 @@ namespace AutoStartLib
 		public void SetWindowStyle(StartWindowStyle winStyle) { this.windowStyle = winStyle; }
 		public void SetWaitTime(int waitTime) { this.WaitTime = waitTime; }
 		public void SetStartPriority(CommonTypes.StartPriority priority) { this.Priority = priority; }
-
+		public void SetStartTimeHistory(ref float[] History) { this.StartTimeHistory = History; }
+		public void SetStartTimeAvg(float Avg) { this.StartTimeAverage = Avg; }
 
 		//Prepare Start
 		private void PrepareStart()
