@@ -27,6 +27,7 @@ namespace ProfilesLib
 			WAITTIME        //Int
 		}
 
+		//Check if the line readed has a valid configuration tag.
 		public static bool IsConfigTag(ConfigTags CfgTag, ref string ConfigString)
 		{
 			if (ConfigString.StartsWith(ConfigNames[(int)CfgTag]))
