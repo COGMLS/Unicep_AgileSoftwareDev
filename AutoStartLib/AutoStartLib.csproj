@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MetricsLib\MetricsLib.csproj" />
+    <ProjectReference Include="..\ProcessAuxLib\ProcessAuxLib.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 //App Libs:
 using MetricsLib;
+using ProcessAuxLib;
 
 namespace AutoStartLib
 {
@@ -133,7 +134,7 @@ namespace AutoStartLib
 		public void SetStartTimeHistory(ref float[] History) { this.StartTimeHistory = History; }
 		public void SetStartTimeAvg(float Avg) { this.StartTimeAverage = Avg; }
 
-		//Prepare Start
+		//Prepare to Start
 		private void PrepareStart()
 		{
 			this.ObjProcess = new ProcessStartInfo();
@@ -175,18 +176,25 @@ namespace AutoStartLib
 			if (this.StartTimeHistory != null)
 			{
 				this.StartTimeAverage = Metrics.MetricsAvgTime(ref this.StartTimeHistory);
-
 			}
 		}
 
 
-		int StartProcess()
+		public int StartProcess()
 		{
-			int returnValue = 0;
+			this.PrepareStart();
+            float timer = ProcessAux.MakeProcess(ref ObjProcess);
 
+            if (timer < 0.0)
+			{
+				Metrics.UpdateMetrics(ref this.StartTimeHistory, ref timer);
 
-
-			return returnValue;
+				return 0;	//Success to initialize the process.
+			}
+			else
+            {
+				return -1;	//Fail to initialize the process.
+            }
 		}
 	}
 }

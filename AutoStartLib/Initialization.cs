@@ -15,7 +15,7 @@ namespace AutoStartLib
 		private int HStartIndex;
 
 		//List controls:
-		private int MaxSimultaneousInit = 0;
+		private int MaxSimultaneousInit = 0;	//Reserved for a future update to support multithreading.
 
 		//Constructors:
 		public InitializationList(int itens)
@@ -88,23 +88,11 @@ namespace AutoStartLib
 			SortClass.Sort(ref this.HStartList);
 		}
 
-		//Load Init List:
-		public int LoadInitList(ref CommonTypes.ImportList[] ImportS)
-		{
-			if(ImportS != null || ImportS.Length <= this.HStartList.Length)
-            {
-				for(int i = 0; i < this.HStartList.Length; i++)
-                {
-					this.HStartList[i].SetProgramName("");
-                }
-
-				return 0;
-            }
-			else
-            {
-				return -1;
-            }
-		}
+		//Prepare Init List
+		public void PrepareInitList2Start()
+        {
+			this.SortList();
+        }
 
 		//Save Init List:
 		public int SaveInitList()
@@ -216,17 +204,19 @@ namespace AutoStartLib
 				return -1;
 			}
 		}
-		public StartApp LoadStartObj(int Index)
+
+		//Start the object
+		public int StartObj(int Index)
         {
 			if(Index < this.HStartIndex && Index >= 0)
             {
-				StartApp temp = null;
+				int StartStatus = this.HStartList[Index].StartProcess();
 
-				return temp;
+				return StartStatus;		//0 for success and -1 if fail.
             }
 			else
             {
-				return null;
+				return 1;	//Index Error.
             }
         }
 	}
