@@ -3,48 +3,6 @@ using System.IO;
 
 namespace MetricsLib
 {
-	public struct MetricsS
-	{
-		MetricsS(float LastStartT, float StartTimeAvg, float[] MetricsHistory)
-		{
-			LastStartTime = LastStartT;
-			StartTimeAverage = StartTimeAvg;
-			MetricsStartTimeHistory = MetricsHistory;
-		}
-
-		private float LastStartTime;
-		private float StartTimeAverage;
-		private float[] MetricsStartTimeHistory;
-
-		//Getters:
-		public float GetLastTime()
-		{
-			return LastStartTime;
-		}
-		public float GetStartTimeAvg()
-		{
-			return StartTimeAverage;
-		}
-		public float[] GetMetricsHistory()
-		{
-			return MetricsStartTimeHistory;
-		}
-
-		//Setters:
-		private void SetLastTime(ref float value)
-		{
-			LastStartTime = value;
-		}
-		private void SetStartTimeAvg(ref float value)
-		{
-			StartTimeAverage = value;
-		}
-		private void SetMetricsHistory(ref float[] value)
-		{
-			MetricsStartTimeHistory = value;
-		}
-	}
-
 	//Metrics class to load, save, update and calculates the metrics for the applications.
 	public static class Metrics
 	{
@@ -101,7 +59,7 @@ namespace MetricsLib
 		}
 
 		//Save the metrics on storage device.
-		public static void SaveMetrics(string ProgramMetrics, ref float[] Metrics)
+		public static void SaveMetrics(ref string ProgramMetrics, ref float[] Metrics)
 		{
 			if (ProgramMetrics != null)
 			{
@@ -139,7 +97,7 @@ namespace MetricsLib
 		}
 
 		//Updates the metrics
-		public static void UpdateMetrics(ref float[] Metrics, float NewMetric)
+		public static void UpdateMetrics(ref float[] Metrics, ref float NewMetric)
 		{
 			//Index variable, used to start from the end.
 			int i = Metrics.Length - 1;
