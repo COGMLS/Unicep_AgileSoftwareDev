@@ -29,30 +29,35 @@ namespace ProfilesLib
 		//Initialization List:
 		InitializationList ProfileInitList = null;
 
+		//Constructor for Profile class, to determinate the basics for the profile.
 		Profile(string profileName)
 		{
 			this.ProfileName = profileName;
 			this.LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
 			this.ProfileDirExist = Directory.Exists(this.LocalAppDataEnv + "\\" + this.AutoStartAppsBase + "\\" + this.ProfilesBase + "\\" + ProfileName + this.ProfileFolderExt);
+
+			if(this.ProfileDirExist)
+            {
+				this.ProfileContainer = this.LocalAppDataEnv + "\\" + this.AutoStartAppsBase + "\\" + this.ProfilesBase + "\\" + ProfileName + this.ProfileFolderExt;
+			}
 		}
 
 		//Load profile, selected by the name.
-		public int LoadProfile(string ProfileName)
+		public int LoadProfile()
 		{
 			//Verify if Profile directory exist.
 			if(this.ProfileDirExist)
 			{
 				//Get the Initialization files.
 				string[] ProfileInitFilesList = Directory.GetFiles(this.ProfileContainer + "\\" + this.ProfileInternal_Init);
-				//Get the Metrics files.
-				string[] ProfileMetricsFilesList = Directory.GetFiles(this.ProfileContainer + "\\" + this.ProfileInternal_Estatistics);
 
 				if(ProfileInitFilesList.Length > 0)
 				{
 					//Initilize the ProfileInitList
-					ProfileInitList = new InitializationList(ProfileInitFilesList.Length);
+					this.ProfileInitList = new InitializationList(ProfileInitFilesList.Length);
 
+					//Loop to read all initialization files.
 					for(int i = 0; i < ProfileInitFilesList.Length; i++)
 					{
 						string[] LoadedProgramConfigs = File.ReadAllLines(ProfileInitFilesList[i]);
@@ -65,6 +70,7 @@ namespace ProfilesLib
 						CommonTypes.StartPriority Priority = CommonTypes.StartPriority.NORMAL;
 						int WaitTime = 0;
 
+						//Loop to read all lines and treat correctly.
 						for (int j = 0; j < LoadedProgramConfigs.Length; j++)
 						{
 							//Gets the configurations saved, searching for the right tags.
@@ -98,6 +104,7 @@ namespace ProfilesLib
 							}
 						}
 
+						//Add to the Initialization List:
 						//If the working directory is null
 						if (WorkingDir == null)
 						{
@@ -107,7 +114,10 @@ namespace ProfilesLib
 						{
 							_ = ProfileInitList.Add2Init(ProgramName, CmdLine, Args, WaitTime, WorkingDir, Priority, windowStyle);
 						}
+
 					}
+
+					this.ProfileInitList.PrepareInitList2Start();
 
 					return 0;
 				}
@@ -152,27 +162,14 @@ namespace ProfilesLib
 
 		}
 
-		//Verify the profiles available
-		string[] GetProfiles()
-		{
-			string ProfilesDir = this.LocalAppDataEnv + "\\" + this.AutoStartAppsBase + "\\" + this.ProfilesBase;
-
-			if (AuxiliarProfileManager.ProfileDirExist())
-			{
-				int NumProfiles = AuxiliarProfileManager.GetProfilesList(ProfilesDir).Length;
-
-			}
-			else
-			{
-
-			}
-
-
-			string[] ProfilesList = new string[10];
-
-
-
-			return ProfilesList;
-		}
+		//Start applications:
+		public void StartAppList()
+        {
+			//Loop to start each object.
+			for(int i = 0; i < this.ProfileInitList.GetInitSize(); i++)
+            {
+				this.ProfileInitList.StartObj(i);
+            }
+        }
 	}
 }
