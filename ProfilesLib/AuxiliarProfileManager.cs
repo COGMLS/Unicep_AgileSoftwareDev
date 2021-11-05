@@ -6,14 +6,17 @@ namespace ProfilesLib
 {
 	public static class AuxiliarProfileManager
 	{
+		//Constants to control the profile directory
+		readonly static private string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 		readonly static private string AutoStartAppsBase = "Auto Start Apps";
 		readonly static private string ProfilesBase = "Profiles";
 		readonly static private string ProfileFolderExt = ".profile";
+		readonly static private string ProfileInternal_Init = "Init";
+		readonly static private string ProfileInternal_Estatistics = "PerfAnalyze";
 
-		//Check the profile directory
-		public static bool ProfileDirExist()
+		//Check the profile base directory
+		public static bool ProfileBaseDirExist()
 		{
-			string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 			string ProfilesBaseDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase;
 
 			//Verify if Profile directory exist.
@@ -25,6 +28,36 @@ namespace ProfilesLib
 			{
 				return false;
 			}
+		}
+
+		//Verify the profiles available
+		public static string[] GetProfiles()
+		{
+			string ProfilesDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase;
+
+			//Will simulate a safe pointer
+			string[] ProfilesList = null;
+
+			if (ProfileBaseDirExist())
+			{
+				ProfilesList = GetProfilesList(ProfilesDir);
+
+				if (ProfilesList != null)
+				{
+					int NumProfiles = ProfilesList.Length;
+
+					string[] FinalProfilesList = new string[NumProfiles];
+
+					for (int i = 0; i < NumProfiles; i++)
+					{
+						FinalProfilesList[i] = (NumProfiles + 1).ToString() + " - " + ProfilesList[i];
+					}
+
+					ProfilesList = FinalProfilesList;
+				}
+			}
+
+			return ProfilesList;
 		}
 
 		//Get the Enumerated profiles available.
@@ -40,6 +73,7 @@ namespace ProfilesLib
 				{
 					//Get the files list with a full paths.
 					string[] ProfilesList = Directory.GetDirectories(Path);
+					//Get the number of characters to remove from the full path + '\' to return only the names.
 					int PathCut = Path.Length + 1;
 
 					//Verify if the FilesList has some file(s) to treat.
@@ -93,7 +127,7 @@ namespace ProfilesLib
 		}
 
 		//Create base profile directory with calling the directory class and handles with exceptions. If create with sucess the return will be a NULL value.
-		static System.Exception CreateProfileRepos()
+		public static int CreateProfileRepos()
 		{
 			string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 			string ProfilesBaseDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase;
@@ -101,11 +135,12 @@ namespace ProfilesLib
 			try
 			{
 				Directory.CreateDirectory(ProfilesBaseDir);
-				return null;
+				return 0;
 			}
 			catch (Exception exception)
 			{
-				return exception;
+				Console.WriteLine(exception.Message);
+				return -1;
 				throw;
 			}
 		}
