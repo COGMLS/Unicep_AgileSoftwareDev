@@ -94,7 +94,7 @@ namespace AutoStartLib
 			this.SortList();
         }
 
-		//Save Init List:
+		//[DEPRECATED]Save Init List:
 		public int SaveInitList()
         {
 			return 0;
@@ -203,6 +203,40 @@ namespace AutoStartLib
 			{
 				return -1;
 			}
+		}
+
+		//Export the object information
+		public string[] ExpObjInfo(int Index)
+        {
+			string[] ExportList = null;
+
+			if(Index >= 0 && Index <= this.GetInitIndexPos())
+            {
+				ExportList = new string[7];
+
+				ExportList[0] = this.HStartList[Index].GetProgramName();
+				ExportList[1] = this.HStartList[Index].GetCmdLine();
+				ExportList[2] = this.HStartList[Index].GetArgs();
+				ExportList[3] = this.HStartList[Index].GetWorkingDir();
+				ExportList[4] = this.HStartList[Index].GetWindowStyleS();
+				ExportList[5] = this.HStartList[Index].GetStartPriorityS();
+				ExportList[6] = this.HStartList[Index].GetWaitTime().ToString();
+            }
+			
+			return ExportList;
+        }
+
+		//Export the metrics history
+		public float[] ExpObjMetrics(int Index)
+        {
+			float[] ExportList = null;
+
+			if (Index >= 0 && Index <= this.GetInitIndexPos())
+			{
+				ExportList = this.HStartList[Index].GetMetrics();
+			}
+
+			return ExportList;
 		}
 
 		//Start the object
