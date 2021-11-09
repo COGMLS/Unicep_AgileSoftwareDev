@@ -36,6 +36,7 @@ namespace AutoStartLib
 		private CommonTypes.StartPriority Priority;
 
 		//Aplication Statistics:
+		private string MetricsContainerPath = null;
 		private float[] StartTimeHistory;
 		private float StartTimeAverage = -1;
 
@@ -118,10 +119,59 @@ namespace AutoStartLib
 		public string GetArgs() { return this.Args; }
 		public string GetWorkingDir() { return this.WorkingDir; }
 		public StartWindowStyle GetWindowStyle() { return this.windowStyle; }
+		public string GetWindowStyleS()     //Converts the StartWindowStyle Enum to string
+		{
+			if (this.windowStyle == StartWindowStyle.NOWINDOW)
+			{
+				return "-1";
+			}
+			else if (this.windowStyle == StartWindowStyle.NORMAL)
+			{
+				return "0";
+			}
+			else if (this.windowStyle == StartWindowStyle.HIDDEN)
+			{
+				return "1";
+			}
+			else if (this.windowStyle == StartWindowStyle.MINIMIZED)
+			{
+				return "2";
+			}
+			else if (this.windowStyle == StartWindowStyle.MAXIMIZED)
+			{
+				return "3";
+			}
+			else
+			{
+				return null;
+			}
+        }
 		public int GetWaitTime() { return this.WaitTime; }
 		public CommonTypes.StartPriority GetStartPriority() { return this.Priority; }
+		public string GetStartPriorityS()   //Converts the Priority Enum to string.
+		{
+			if (this.Priority == CommonTypes.StartPriority.LOW)
+			{
+				return "0";
+			}
+			else if (this.Priority == CommonTypes.StartPriority.NORMAL)
+			{
+				return "1";
+			}
+			else if (this.Priority == CommonTypes.StartPriority.HIGH)
+			{
+				return "2";
+			}
+			else
+			{
+				return null;
+			}
+        }
 		public float[] GetStartTimeHistory() { return this.StartTimeHistory; }
 		public float GetStartTimeAvg() { return this.StartTimeAverage; }
+		public string GetMetricsPath() { return this.MetricsContainerPath; }
+		public float[] GetMetrics() { return this.StartTimeHistory; }
+		public string GetProfileContainer() { return this.MetricsContainerPath; }
 
 		//Setters:
 		public void SetProgramName(string ProgramName) { this.ProgramName = ProgramName; }
@@ -133,6 +183,8 @@ namespace AutoStartLib
 		public void SetStartPriority(CommonTypes.StartPriority priority) { this.Priority = priority; }
 		public void SetStartTimeHistory(ref float[] History) { this.StartTimeHistory = History; }
 		public void SetStartTimeAvg(float Avg) { this.StartTimeAverage = Avg; }
+		public void SetMetricsPath(string Path) { this.MetricsContainerPath = Path; }
+		public void SetProfileContainer(string ProfileContainer) { this.MetricsContainerPath = ProfileContainer; }
 
 		//Prepare to Start
 		private void PrepareStart()
@@ -171,15 +223,18 @@ namespace AutoStartLib
 				this.ObjProcess.WindowStyle = ProcessWindowStyle.Normal;
 			}
 
-			this.StartTimeHistory = Metrics.LoadMetrics(this.ProgramName);
-
-			if (this.StartTimeHistory != null)
+			if (this.MetricsContainerPath != null)
 			{
-				this.StartTimeAverage = Metrics.MetricsAvgTime(ref this.StartTimeHistory);
+				this.StartTimeHistory = Metrics.LoadMetrics(ref this.MetricsContainerPath, ref this.ProgramName);
+
+				if (this.StartTimeHistory != null)
+				{
+					this.StartTimeAverage = Metrics.MetricsAvgTime(ref this.StartTimeHistory);
+				}
 			}
 		}
 
-
+		//Start the object as a new process
 		public int StartProcess()
 		{
 			this.PrepareStart();
