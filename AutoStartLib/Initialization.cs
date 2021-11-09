@@ -101,10 +101,14 @@ namespace AutoStartLib
         }
 
 		//Add a object to initialyze:
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime = 0)
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime = 0, string ProfileContainer = null)
 		{
 			if (this.HStartIndex + 1 < this.HStartList.Length)
 			{
+				//Set the ProfileContainer path for metrics loading files
+				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
+
+				//Atribute the configurations for the object
 				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
 				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
 				this.HStartList[this.HStartIndex + 1].SetArgs(args);
@@ -112,6 +116,7 @@ namespace AutoStartLib
 				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
 				this.HStartList[this.HStartIndex + 1].SetStartPriority(CommonTypes.StartPriority.NORMAL);
 
+				//Set the actual index (HStartIndex + 1) as used
 				this.HStartIndex++;
 
 				return 0;
@@ -121,10 +126,14 @@ namespace AutoStartLib
 				return -1;
             }
 		}
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir)
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, string ProfileContainer = null)
 		{
 			if (this.HStartIndex + 1 < this.HStartList.Length)
 			{
+				//Set the ProfileContainer path for metrics loading files
+				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
+
+				//Atribute the configurations for the object
 				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
 				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
 				this.HStartList[this.HStartIndex + 1].SetArgs(args);
@@ -133,6 +142,7 @@ namespace AutoStartLib
 				this.HStartList[this.HStartIndex + 1].SetStartPriority(CommonTypes.StartPriority.NORMAL);
 				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
 
+				//Set the actual index (HStartIndex + 1) as used
 				this.HStartIndex++;
 
 				return 0;
@@ -142,10 +152,14 @@ namespace AutoStartLib
 				return -1;
             }
 		}
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority)
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, string ProfileContainer = null)
 		{
 			if (this.HStartIndex + 1 < this.HStartList.Length)
 			{
+				//Set the ProfileContainer path for metrics loading files
+				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
+
+				//Atribute the configurations for the object
 				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
 				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
 				this.HStartList[this.HStartIndex + 1].SetArgs(args);
@@ -154,6 +168,7 @@ namespace AutoStartLib
 				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
 				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
 
+				//Set the actual index (HStartIndex + 1) as used
 				this.HStartIndex++;
 
 				return 0;
@@ -163,10 +178,14 @@ namespace AutoStartLib
 				return -1;
             }
 		}
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, StartWindowStyle windowStyle, string ProfileContainer = null)
 		{
 			if (this.HStartIndex + 1 < this.HStartList.Length)
 			{
+				//Set the ProfileContainer path for metrics loading files
+				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
+
+				//Atribute the configurations for the object
 				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
 				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
 				this.HStartList[this.HStartIndex + 1].SetArgs(args);
@@ -175,6 +194,7 @@ namespace AutoStartLib
 				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
 				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
 
+				//Set the actual index (HStartIndex + 1) as used
 				this.HStartIndex++;
 
 				return 0;
@@ -184,10 +204,14 @@ namespace AutoStartLib
 				return -1;
             }
 		}
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
+		public int Add2Init(string programName, string cmdLine, string args, int waitTime, CommonTypes.StartPriority priority, StartWindowStyle windowStyle, string ProfileContainer = null)
 		{
 			if (this.HStartIndex + 1 < this.HStartList.Length)
 			{
+				//Set the ProfileContainer path for metrics loading files
+				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
+
+				//Atribute the configurations for the object
 				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
 				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
 				this.HStartList[this.HStartIndex + 1].SetArgs(args);
@@ -195,6 +219,7 @@ namespace AutoStartLib
 				this.HStartList[this.HStartIndex + 1].SetWindowStyle(windowStyle);
 				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
 
+				//Set the actual index (HStartIndex + 1) as used
 				this.HStartIndex++;
 
 				return 0;
