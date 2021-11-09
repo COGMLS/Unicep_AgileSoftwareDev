@@ -16,10 +16,10 @@ namespace MetricsLib
 		const int MetricsLengthLimit = 30;
 
 		//Load the program metrics and returns a float array from the last 30 times.
-		public static float[] LoadMetrics(string ProgramMetrics)
+		public static float[] LoadMetrics(ref string ProfileContainer ,ref string ProgramName)
 		{
 			//Receaves the loaded string array.
-			string[] MetricsTemp = LoadMetricFile(ref ProgramMetrics);
+			string[] MetricsTemp = LoadMetricFile(ref ProfileContainer, ref ProgramName);
 
 			if (MetricsTemp != null)
 			{
@@ -40,15 +40,14 @@ namespace MetricsLib
 		}
 
 		//Load the saved program metrics file
-		private static string[] LoadMetricFile(ref string ProgramMetrics)
+		private static string[] LoadMetricFile(ref string ProfileContainer, ref string ProgramName)
 		{
-			string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-			string MetricsDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileInternal_Estatistics;
+			string MetricsDir = ProfileContainer + "\\" + ProfileInternal_Estatistics;
 
 			//Verify if exist the metrics file and load it to a string array.
-			if (File.Exists(MetricsDir + "\\" + ProgramMetrics))
+			if (File.Exists(MetricsDir + "\\" + ProgramName))
 			{
-				string[] MetricsTemp = File.ReadAllLines(MetricsDir + "\\" + ProgramMetrics);
+				string[] MetricsTemp = File.ReadAllLines(MetricsDir + "\\" + ProgramName);
 
 				return MetricsTemp;
 			}
@@ -59,23 +58,19 @@ namespace MetricsLib
 		}
 
 		//Save the metrics on storage device.
-		public static void SaveMetrics(ref string ProgramMetrics, ref float[] Metrics)
+		public static void SaveMetrics(ref string ProfileContainer, ref string ProgramName, ref float[] Metrics)
 		{
-			if (ProgramMetrics != null)
+			string MetricsDir = ProfileContainer + "\\" + ProfileInternal_Estatistics;
+
+			string[] MetricsStringFile = new string[Metrics.Length];
+
+			//Convert the float array to a string array
+			for (int i = 0; i < Metrics.Length; i++)
 			{
-				string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				string MetricsDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileInternal_Estatistics;
-
-				string[] MetricsStringFile = new string[Metrics.Length];
-
-				//Convert the float array to a string array
-				for (int i = 0; i < Metrics.Length; i++)
-				{
-					MetricsStringFile[i] = Metrics[i].ToString();
-				}
-
-				File.WriteAllLines(MetricsDir + "\\" + ProgramMetrics, MetricsStringFile);
+				MetricsStringFile[i] = Metrics[i].ToString();
 			}
+
+			File.WriteAllLines(MetricsDir + "\\" + ProgramName, MetricsStringFile);
 		}
 
 		//Calculates the Average time
