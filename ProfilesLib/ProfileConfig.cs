@@ -40,41 +40,6 @@ namespace ProfilesLib
 			}
 		}
 
-		//Load the respectly config
-		public static int LoadConfig(ConfigTags CfgTag, ref string ConfigString, ref object obj)
-		{
-			if (CfgTag == ConfigTags.PROGRAMNAME || CfgTag == ConfigTags.COMMANDLINE || CfgTag == ConfigTags.ARGS || CfgTag == ConfigTags.WORKINGDIR)
-			{
-				obj = LoadConfigString(CfgTag, ref ConfigString);
-
-				return 0;
-			}
-			else if (CfgTag == ConfigTags.WINDOWSTYLE)
-			{
-				obj = LoadConfigWinStyle(CfgTag, ref ConfigString);
-
-				return 0;
-			}
-			else if (CfgTag == ConfigTags.PRIORITY)
-			{
-				obj = LoadConfigPriority(CfgTag, ref ConfigString);
-
-				return 0;
-			}
-			else if (CfgTag == ConfigTags.WAITTIME)
-			{
-				obj = LoadConfigInt(CfgTag, ref ConfigString);
-
-				return 0;
-			}
-			else
-			{
-				obj = null;
-
-				return -1;
-			}
-		}
-
 		//Load and treat correctly the string value
 		public static string LoadConfigString(ConfigTags CfgTag, ref string ConfigString)
 		{

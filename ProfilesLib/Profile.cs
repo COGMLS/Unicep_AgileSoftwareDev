@@ -2,7 +2,7 @@
 using System.IO;
 
 using AutoStartLib;
-
+using MetricsLib;
 using DirectoryAux;
 
 namespace ProfilesLib
@@ -41,6 +41,24 @@ namespace ProfilesLib
             {
 				this.ProfileContainer = this.LocalAppDataEnv + "\\" + this.AutoStartAppsBase + "\\" + this.ProfilesBase + "\\" + ProfileName + this.ProfileFolderExt;
 			}
+			else
+            {
+				this.ProfileContainer = this.LocalAppDataEnv + "\\" + this.AutoStartAppsBase + "\\" + this.ProfilesBase + "\\" + ProfileName + this.ProfileFolderExt;
+
+				try
+				{
+					Directory.CreateDirectory(this.ProfileContainer);
+					Directory.CreateDirectory(this.ProfileContainer + "\\" + this.ProfileInternal_Init);
+					Directory.CreateDirectory(this.ProfileContainer + "\\" + this.ProfileInternal_Estatistics);
+
+					this.ProfileDirExist = Directory.Exists(this.LocalAppDataEnv + "\\" + this.AutoStartAppsBase + "\\" + this.ProfilesBase + "\\" + ProfileName + this.ProfileFolderExt);
+				}
+				catch (Exception)
+                {
+					this.ProfileDirExist = false;
+					throw;
+                }
+            }
 		}
 
 		//Load profile, selected by the name.
@@ -116,51 +134,53 @@ namespace ProfilesLib
 						}
 
 					}
-
+					//Organizes the initialization list
 					this.ProfileInitList.PrepareInitList2Start();
-
+					//Profile loaded with success.
 					return 0;
 				}
 				else
 				{
 					//Profile dosn't have files to be loaded.
-
 					return -1;
 				}
 			}
 			else
 			{
 				//Profile dosn't exist.
-
 				return -2;
 			}
 		}
 
 		//Save the profile
-		public void SaveProfile(bool OverWrite)
+		public void SaveProfile()
         {
-			string ProfileInitConfig = this.ProfileContainer + "\\" + this.ProfileInternal_Init;
+			if (this.ProfileDirExist)
+			{
+				//Loop that start from 0 to the variable HStartIndex to avoid get null values, in cases with a empty objects.
+				for (int i = 0; i < this.ProfileInitList.GetInitSize(); i++)
+				{
+					string[] LoadedProgramConfigs;
 
-			for (int i = 0; i < this.ProfileInitList.GetInitSize(); i++)
-            {
-				string[] LoadedProgramConfigs;
+					//string ProgramName = null;
+					//string CmdLine = null;
+					//string Args = null;
+					//string WorkingDir = null;
+					//StartWindowStyle windowStyle = StartWindowStyle.NORMAL;
+					//CommonTypes.StartPriority Priority = CommonTypes.StartPriority.NORMAL;
+					//int WaitTime = 0;
 
-				//string ProgramName = null;
-				//string CmdLine = null;
-				//string Args = null;
-				//string WorkingDir = null;
-				//StartWindowStyle windowStyle = StartWindowStyle.NORMAL;
-				//CommonTypes.StartPriority Priority = CommonTypes.StartPriority.NORMAL;
-				//int WaitTime = 0;
+					LoadedProgramConfigs = this.ProfileInitList.ExpObjInfo(i);
 
-				
-				
+					//Saves the object configuration's to a file with the program's name will be init.
+					File.WriteAllLines(this.ProfileContainer + "\\" + this.ProfileInternal_Init + "\\" + LoadedProgramConfigs[0], LoadedProgramConfigs);
+
+					//Save the metrics file:
+					float[] MetricsList = this.ProfileInitList.ExpObjMetrics(i);
+					Metrics.SaveMetrics(ref this.ProfileContainer, ref LoadedProgramConfigs[0], ref MetricsList);
+				}
 			}
         }
-		public void SaveProfile(string ProfileName, bool OverWrite)
-		{
-
-		}
 
 		//Start applications:
 		public void StartAppList()
