@@ -230,6 +230,26 @@ namespace AutoStartLib
 			}
 		}
 
+		//Export object list
+		public string[] ExpObjList()
+		{
+			if (this.GetInitSize() > 0)
+			{
+				string[] ObjList = new string[this.GetInitSize()];
+
+				for (int i = 0; i <= this.GetInitIndexPos(); i++)
+				{
+					ObjList[i] = this.HStartList[i].GetProgramName();
+				}
+
+				return ObjList;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		//Export the object information
 		public string[] ExpObjInfo(int Index)
         {
