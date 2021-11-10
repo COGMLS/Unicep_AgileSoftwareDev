@@ -157,6 +157,9 @@ namespace ProfilesLib
         {
 			if (this.ProfileDirExist)
 			{
+				//Check if some old file isn't necessary any more
+				ChkSavFiles();
+
 				//Loop that start from 0 to the variable HStartIndex to avoid get null values, in cases with a empty objects.
 				for (int i = 0; i < this.ProfileInitList.GetInitSize(); i++)
 				{
@@ -181,6 +184,54 @@ namespace ProfilesLib
 				}
 			}
         }
+
+		//Check saved files
+		private void ChkSavFiles()
+        {
+			//Get the paths arrays to the saved init. files.
+			string[] OldInitFilesPaths = Directory.GetFiles(this.ProfileContainer + "\\" + this.ProfileInternal_Init);
+			//Get only the names from saved init. files.
+			string[] OldInitFiles = DirectoryTreatment.GetFilesName(this.ProfileContainer + "\\" + this.ProfileInternal_Init);
+			//Get the names for new files.
+			string[] NewInitFiles = this.ProfileInitList.ExpObjList();
+
+			//In case the list isn't empty.
+			if (OldInitFiles != null)
+			{
+				for (int i = 0; i < OldInitFiles.Length; i++)
+				{
+					//The old file will be deleted?
+					bool WillDelete = true;
+
+					//Check if the new files list has the same name, if don't the file will be deleted to avoid initialize unwanted applications.
+					for (int j = 0; j < NewInitFiles.Length; j++)
+					{
+						//In case to preserve the file, the old one will be overwrited.
+						if (OldInitFiles[i] == NewInitFiles[j])
+						{
+							WillDelete = false;
+							break;
+						}
+					}
+
+					//If the old file will be deleted
+					if (WillDelete == true)
+					{
+						try
+						{
+							//Delete the init. file
+							File.Delete(OldInitFilesPaths[i]);
+							//Delete the metrics file.
+							File.Delete(this.ProfileContainer + "\\" + this.ProfileInternal_Estatistics + "\\" + OldInitFiles[i]);
+						}
+						catch (Exception)
+						{
+							throw;
+						}
+					}
+				}
+			}
+		}
 
 		//Start applications:
 		public void StartAppList()
