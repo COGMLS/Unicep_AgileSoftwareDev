@@ -39,6 +39,8 @@ namespace AutoStartLib
         {
 			return this.HStartIndex;
         }
+
+		//Define a new size for the Initialization List.
 		public int SetInitSize(int newSize)
 		{
 			StartApp[] temp = null;
