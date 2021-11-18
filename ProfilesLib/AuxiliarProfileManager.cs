@@ -30,7 +30,7 @@ namespace ProfilesLib
 			}
 		}
 
-		//Verify the profiles available
+		//Get the Enumerated profiles available.
 		public static string[] GetProfiles()
 		{
 			string ProfilesDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase;
@@ -60,7 +60,7 @@ namespace ProfilesLib
 			return ProfilesList;
 		}
 
-		//Get the Enumerated profiles available.
+		//Verify the profiles available
 		public static string[] GetProfilesList(string Path)
 		{
 			//Verify if Profile directory exist.
@@ -126,10 +126,9 @@ namespace ProfilesLib
 			return NumProfiles;
 		}
 
-		//Create base profile directory with calling the directory class and handles with exceptions. If create with sucess the return will be a NULL value.
+		//Create base profile directory with calling the directory class and handles with exceptions.
 		public static int CreateProfileRepos()
 		{
-			string LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 			string ProfilesBaseDir = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase;
 
 			try
@@ -143,6 +142,67 @@ namespace ProfilesLib
 				return -1;
 				throw;
 			}
+		}
+
+		//Create a new profile
+		public static int CreateNewProfile(string ProfileName)
+        {
+			int ProfileReposStatus = 0;
+			if(!ProfileBaseDirExist())
+            {
+				ProfileReposStatus = CreateProfileRepos();
+            }
+
+			if(ProfileReposStatus == 0)
+            {
+				string ProfileFinalPath = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileName + ProfileFolderExt;
+				if(!Directory.Exists(ProfileFinalPath))
+                {
+                    try
+                    {
+						Directory.CreateDirectory(ProfileFinalPath);
+						return 0;		//Profile created with success.
+                    }
+                    catch (Exception e)
+                    {
+						Console.WriteLine(e.Message);
+						return -1;		//Fail to create the profile container.
+                        throw;
+                    }
+					
+                }
+				return -2;	//The path to the new profile already exist.
+            }
+			return -3;		//Wasn't possible create the Profile Repository.
+        }
+
+		//Remove a existant profile
+		public static int RemoveProfile(string ProfileName)
+        {
+			if (!ProfileBaseDirExist())
+			{
+				return -3;      //Profile Repository dosn't exist.
+			}
+			else
+			{
+				string ProfileFinalPath = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileName + ProfileFolderExt;
+				if (Directory.Exists(ProfileFinalPath))
+				{
+					try
+					{
+						Directory.Delete(ProfileFinalPath, true);
+						return 0;       //Profile removed with success.
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.Message);
+						return -1;      //Fail to remove the profile container.
+						throw;
+					}
+
+				}
+				return -2;  //The path to the profile dosn't exist.
+			}	
 		}
 	}
 }
