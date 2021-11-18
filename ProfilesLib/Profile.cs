@@ -30,7 +30,7 @@ namespace ProfilesLib
 		InitializationList ProfileInitList = null;
 
 		//Constructor for Profile class, to determinate the basics for the profile.
-		Profile(string profileName)
+		public Profile(string profileName)
 		{
 			this.ProfileName = profileName;
 			this.LocalAppDataEnv = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -230,6 +230,47 @@ namespace ProfilesLib
 						}
 					}
 				}
+			}
+		}
+
+		//Initialize init list
+		public int InitializeInitList(int Size)
+		{
+			if (this.ProfileInitList == null)
+			{
+				this.ProfileInitList = new InitializationList(Size);
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
+		//Set the Initialization size
+		public void SetInitSize(int NewSize)
+        {
+			_ = this.ProfileInitList.SetInitSize(NewSize);
+        }
+
+		//Get the Initialization size
+		public int GetInitSize()
+        {
+			return this.ProfileInitList.GetInitSize();
+        }
+
+		//Adds a start entry
+		public void Add2StartList(string ProgramName, string CmdLine, string Args, string WorkingDir, StartWindowStyle windowStyle, CommonTypes.StartPriority Priority, int WaitTime)
+        {
+			//Add to the Initialization List:
+			//If the working directory is null
+			if (WorkingDir == null)
+			{
+				_ = ProfileInitList.Add2Init(ProgramName, CmdLine, Args, WaitTime, Priority, windowStyle);
+			}
+			else
+			{
+				_ = ProfileInitList.Add2Init(ProgramName, CmdLine, Args, WaitTime, WorkingDir, Priority, windowStyle);
 			}
 		}
 
