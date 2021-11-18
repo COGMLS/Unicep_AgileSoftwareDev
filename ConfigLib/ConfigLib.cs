@@ -1,42 +1,100 @@
 ﻿using System;
-using System.Security.Cryptography;
+using System.IO;
 
 namespace ConfigLib
 {
-	public class ConfigLib
+	public class Config : AdminCfg
 	{
+		//
+		//Constants:
+		//
+		private readonly string CommonConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + "Auto Start Apps";
+
+
+		//
 		//Private variables for configurate the program
-		private byte[] AdminPass = null;
+		//
 		bool IsAdminPass;
 		bool IsAdd2ProfileCl;
 		bool IsAddCsv2ProfileCl;
+		bool IsLoadProfile;
+		bool IsNewProfile;
+		bool IsRemoveProfile;
+		bool IsListProfile;
 
+		//
 		//Public vaiables to define the program configurations:
+		//
 		string ProfileFocus = null;
 
-		//Public functions to configurate properly the application:
-
-
-		//Private functions to configurate the application:
-
-		//Creates a buffer byte array from a string to be used to calculate the hash code
-		byte[] AdminPassBuffer(string Password)
+		//Contructor for ConfigLib
+		public Config()
         {
-			byte[] buffer = new byte[Password.Length];
-
-            foreach (var item in Password)
+			string adm_bin = this.CommonConfigPath + "\\adm.bin";
+			if (File.Exists(adm_bin))
             {
-				buffer[item] = (byte)Password[item];
+				this.AdminPass = File.ReadAllBytes(adm_bin);
             }
+		}
 
-			return buffer;
+		//
+		//Public functions to configurate properly the application:
+		//
+
+		//
+		// Setters to define the current configurantion is used in actual instance.
+		//
+
+		//Define is Add2Profile var
+		public void SetAdd2ProfileControl(bool value)
+        {
+			this.IsAdd2ProfileCl = value;
         }
 
-		//Converts the password to byte array that represents a Hash code (SHA-256)
-		private byte[] Password2HashCode(string Password)
+		//Define is AddCsv2Profile var
+		public void SetAddCsv2ProfileControl(bool value)
         {
-			HashAlgorithm AdminPass = HashAlgorithm.Create("SHA256");
-			return AdminPass.ComputeHash(AdminPassBuffer(Password));
+			this.IsAddCsv2ProfileCl = value;
+        }
+
+		//Define is LoadProfile var
+		public void SetLoadProfile(bool value)
+		{
+			this.IsLoadProfile = value;
+		}
+
+		//Define is NewProfile var
+		public void SetNewProfile(bool value)
+		{
+			this.IsNewProfile = value;
+		}
+
+		//Define is RemoveProfile var
+		public void SetRemoveProfile(bool value)
+		{
+			this.IsRemoveProfile = value;
+		}
+
+		//Define is ListProfile var
+		public void SetListProfile(bool value)
+		{
+			this.IsListProfile = value;
+		}
+
+		//Define the profile focus to work
+		public void SetProfileFocus(string ProfileName)
+        {
+			this.ProfileFocus = ProfileName;
+        }
+
+		//
+		// Getters for configs:
+		//
+
+		//Shows the focused profile
+		public string GetProfileFocus()
+        {
+			return this.ProfileFocus;
         }
 	}
 }
