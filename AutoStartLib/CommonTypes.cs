@@ -15,24 +15,17 @@ namespace AutoStartLib
 		public struct ImportList
 		{
 			//Application Info:
-			string ProgramName;
-			string CmdLine;
-			string Args;
-			string WorkingDir;
+			public string ProgramName;
+			public string CmdLine;
+			public string Args;
+			public string WorkingDir;
 
-			bool DefinedAdvancedOptions;
-			bool useShellEx;
-			bool createNoWindow;
-
-			StartWindowStyle windowStyle;
+			//Window Style
+			public StartWindowStyle windowStyle;
 
             //Start method:
-            int WaitTime;
-			CommonTypes.StartPriority Priority;
-
-			//Aplication Statistics:
-			float[] StartTimeHistory;
-			float StartTimeAverage;
+            public int WaitTime;
+			public CommonTypes.StartPriority Priority;
 		}
 	}
 }
