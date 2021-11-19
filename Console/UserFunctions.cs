@@ -83,6 +83,43 @@ namespace AutoStartupConsole
             }
         }
 
+        public static void RemAppF(ref string[] args, ref bool CmdLineOk, ref int CmdLineWeight)
+        {
+            string RemAppValue = CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.REMAPP, ref CmdLineOk, ref CmdLineWeight);
+
+            string ProfileName = null;
+            string ProgramName = null;
+
+            bool isProgramName = false;
+
+            //Extract the values of ProfileName and ProgramName
+            for(int i = 0; i < RemAppValue.Length; i++)
+            {
+                if(RemAppValue[i] == ',')
+                {
+                    i++;
+                    isProgramName = true;
+                }
+                if(isProgramName)
+                {
+                    ProgramName += RemAppValue[i];
+                }
+                else
+                {
+                    ProfileName += RemAppValue[i];
+                }
+            }
+
+            if (ProfileName != null)
+            {
+                UserInterations.RemAppInteraction(ref ProfileName, ref ProgramName);
+            }
+            else
+            {
+                Console.WriteLine("Wasn't possible read the data.");
+            }
+        }
+
         public static void AddCsv2Profile(ref string[] args, ref bool CmdLineOk, ref int CmdLineWeight)
         {
             string CsvPath = CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADDCSV2PROFILE, ref CmdLineOk, ref CmdLineWeight);
@@ -112,9 +149,13 @@ namespace AutoStartupConsole
             }
         }
 
-        public static void AdminConfigF(ref Config AppCfg, ref string[] args, ref bool CmdLineOk, ref int CmdLineWeight)
+        public static void AdminConfigF(ref Config AppCfg, ref string[] args, ref bool CmdLineOk, ref int CmdLineWeight, bool IsCmdLine = true)
         {
-            string Password = CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight);
+            string Password = null;
+            if (IsCmdLine)
+            {
+                Password = CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight);
+            }
             Console.Write("Enter with the new password: ");
             string NewPassword = Console.ReadLine();
             AppCfg.SetAdminPass(Password, NewPassword);
