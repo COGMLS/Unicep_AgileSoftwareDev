@@ -38,6 +38,28 @@ namespace ConfigLib
 			}
 		}
 
+		//Get from the user the password and already test if is correct. In case the AdminPass wasn't setted, th return value will be always true.
+		public bool GetAndTestPassword()
+		{
+			bool PasswordApporved = false;
+
+			if (IsAdminPassSetted())
+			{
+				Console.WriteLine("Enter with the Administrator Password: ");
+				string Password = Console.ReadLine();
+
+				PasswordApporved = ApprovedAdminPass(Password);
+
+				if (!PasswordApporved)
+				{
+					Console.WriteLine("\n\n[WARNING]::PASSWORD NOT APPROVED!\n\n");
+				}
+
+				return PasswordApporved;
+			}
+			return true;
+		}
+
 		//Check if the password is correct
 		public bool ApprovedAdminPass(string Password)
 		{
@@ -62,7 +84,7 @@ namespace ConfigLib
 		//
 
 		//Creates a buffer byte array from a string to be used to calculate the hash code
-		byte[] AdminPassBuffer(string Password)
+		private byte[] AdminPassBuffer(string Password)
 		{
 			byte[] buffer = new byte[Password.Length];
 
