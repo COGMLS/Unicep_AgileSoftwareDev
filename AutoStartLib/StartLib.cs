@@ -25,7 +25,7 @@ namespace AutoStartLib
 		private string Args;
 		private string WorkingDir;
 
-		private bool DefinedAdvancedOptions = false;	//Reserved for a future update.
+		//private bool DefinedAdvancedOptions = false;	//Reserved for a future update.
 		private bool useShellEx;
 		private bool createNoWindow;
 

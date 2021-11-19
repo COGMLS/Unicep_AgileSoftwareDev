@@ -6,10 +6,10 @@ namespace MetricsLib
 	//Metrics class to load, save, update and calculates the metrics for the applications.
 	public static class Metrics
 	{
-		readonly static private string AutoStartAppsBase = "Auto Start Apps";
-		readonly static private string ProfilesBase = "Profiles";
-		readonly static private string ProfileFolderExt = ".profile";
-		readonly static private string ProfileInternal_Init = "Init";
+		//readonly static private string AutoStartAppsBase = "Auto Start Apps";
+		//readonly static private string ProfilesBase = "Profiles";
+		//readonly static private string ProfileFolderExt = ".profile";
+		//readonly static private string ProfileInternal_Init = "Init";
 		readonly static private string ProfileInternal_Estatistics = "PerfAnalyze";
 
 		//Contant value to limit the maximum length to keep.
