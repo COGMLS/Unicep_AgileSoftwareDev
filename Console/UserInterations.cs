@@ -10,11 +10,30 @@ namespace AutoStartupConsole
 {
 	public static class UserInterations
 	{
-		public static void GetAppEntriesTUI(ref Profile profile, ref int Entries)
+		public static void GetAppEntriesTUI(ref Profile profile, ref int Entries, bool IsFromConsoleInterration = false)
 		{
-			profile.InitializeInitList(Entries);
+			_ = profile.InitializeInitList(Entries);
+			
+			if(IsFromConsoleInterration)
+            {
+				int Initreturn = profile.SetInitSize(Entries);
 
-			for (int i = 0; i < Entries;)
+				if(Initreturn == 0)
+                {
+					Console.WriteLine("Initialization size changed with succefull!");
+                }
+				else if(Initreturn == 1)
+                {
+					Console.WriteLine("Keep size unchanged. Warning: This could overwrite some configurations!");
+                }
+				else if(Initreturn == -1)
+                {
+					Console.WriteLine("An invalid number was sended.");
+					return;		//Cancell the operation.
+                }
+            }
+
+			for (int i = 0; i < Entries && i < profile.GetInitSize();)
 			{
 				string ProgramName = null;
 				string CmdLine = null;
@@ -85,12 +104,10 @@ namespace AutoStartupConsole
 				else if (result == -2)
 				{
 					Console.WriteLine("The path to the profile dosn't exist.");
-
 				}
 				else
 				{
 					Console.WriteLine("Profile Repository dosn't exist.");
-
 				}
 			}
 			else
@@ -152,6 +169,60 @@ namespace AutoStartupConsole
             }
 
 			return str;
+		}
+
+		public static void RemAppInteraction(ref Profile profileLoaded, ref string ProfileName, ref string ProgramName)
+		{
+			Console.Write("Do you want remove {0}, from profile {1}? (y|n): ", ProgramName, ProfileName);
+			string UserEntry = Console.ReadLine();
+
+			if (UserEntry.ToLower() == "y")
+			{
+				int result = profileLoaded.RemAppStartList(ProgramName);
+				if (result == 0)
+				{
+					Console.WriteLine("App removed from {0}.", ProfileName);
+				}
+				else
+				{
+					Console.WriteLine("Fail to remove the app.");
+				}
+			}
+			else
+			{
+				Console.WriteLine("Operation canceled.");
+			}
+		}
+
+		public static void RemAppInteraction(ref string ProfileName, ref string ProgramName)
+		{
+			Console.Write("Do you want remove {0}, from profile {1}? (y|n): ", ProgramName, ProfileName);
+			string UserEntry = Console.ReadLine();
+
+			if (UserEntry.ToLower() == "y")
+			{
+				int result = AuxiliarProfileManager.RemoveAppFromProfile(ProfileName, ProgramName);
+				if (result == 0)
+				{
+					Console.WriteLine("App removed from {0}.", ProfileName);
+				}
+				else if(result == -1)
+				{
+					Console.WriteLine("Fail to remove the app.");
+				}
+				else if (result == -2)
+				{
+					Console.WriteLine("The path to the profile dosn't exist.");
+				}
+				else
+				{
+					Console.WriteLine("Profile Repository dosn't exist.");
+				}
+			}
+			else
+			{
+				Console.WriteLine("Operation canceled.");
+			}
 		}
 
 		private static StartWindowStyle ExtractWindowStyle(ref string StrArr, ref int Index)
