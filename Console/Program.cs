@@ -1,8 +1,13 @@
 ﻿/* Project: Auto Startup Apps
  * ***********************************************
  * Authors:
- *          Matheus Lopes Silvati
- *          Caroline Paganelli Corrêa dos Santos
+ *          Matheus Lopes Silvati | RA: 4200872
+ *          Caroline Paganelli Corrêa dos Santos | 4200890
+ * ***********************************************
+ * Professor: Wesley Pecoraro
+ * ***********************************************
+ * Course: Computer Engineering
+ * Discipline: P.I.M. - VI
  * ***********************************************
  * Date: 2021/09/23
  * ***********************************************
@@ -26,17 +31,17 @@ namespace AutoStartupConsole
 		{
 			/**Configuration sequence:
 			 * ----------------------------
-			 * 1. Create the config obj.
+			 * 1. Create the config obj and verify if has a admin password.
 			 * 2. Check the cmd line weight sum.
 			 * 3. Verify if the cmd line is ok.
 			 * 4. Get the values of each variable.
 			 * 5. Create the config obj, sending all args info.
-			 * 6. 
+			 * 6. In case the application don't have arguments, start the user interactive mode.
 			 */
 
 			 Config AppCfg = new Config();
 
-			if(args.Length > 1)
+			if(args.Length > 0)
 			{
 				int CmdLineWeight = CliClass.VerifyCmdLine(ref args);
 				bool CmdLineOk = CliClass.IsCmdLineOk(CmdLineWeight, AppCfg.IsAdminPassSetted());
@@ -68,12 +73,17 @@ namespace AutoStartupConsole
 						UserFunctions.Add2ProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
 						break;
 					}
-					case 32:        //AddCsv2Profile (Ok if dosn't have a password setted)
+					case 32:		//RemApp (Ok if dosn't have a password setted)
+                    {
+							UserFunctions.RemAppF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							break;
+                    }
+					case 64:        //AddCsv2Profile (Ok if dosn't have a password setted)
 					{
 						UserFunctions.AddCsv2Profile(ref args, ref CmdLineOk, ref CmdLineWeight);
 						break;
 					}
-					case 130:       //--NewProfile --AdminPass
+					case 258:       //--NewProfile --AdminPass
 					{
 						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
 						{
@@ -85,7 +95,7 @@ namespace AutoStartupConsole
 						}
 						break;
 					}
-					case 132:       //--RemoveProfile --AdminPass
+					case 260:       //--RemoveProfile --AdminPass
 					{
 						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
 						{
@@ -97,7 +107,7 @@ namespace AutoStartupConsole
 						}
 						break;
 					}
-					case 144:       //--Add2Profile --AdminPass
+					case 272:       //--Add2Profile --AdminPass
 					{
 						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
 						{
@@ -109,7 +119,19 @@ namespace AutoStartupConsole
 						}
 							break;
 					}
-					case 160:       //--AddCsv2Profile --AdminPass
+					case 288:       //--RemApp --AdminPass
+                    {
+						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+						{
+							UserFunctions.RemAppF(ref args, ref CmdLineOk, ref CmdLineWeight);
+						}
+						else
+						{
+							Console.WriteLine("Password not approved!");
+						}
+							break;
+                    }
+					case 320:       //--AddCsv2Profile --AdminPass
 					{
 						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
 						{
@@ -121,7 +143,7 @@ namespace AutoStartupConsole
 						}
 						break;
 					}
-					case 192:       //--AdminConfig --AdminPass
+					case 384:       //--AdminConfig --AdminPass
 					{
 						UserFunctions.AdminConfigF(ref AppCfg, ref args, ref CmdLineOk, ref CmdLineWeight);
 						break;
@@ -140,7 +162,226 @@ namespace AutoStartupConsole
 			}
 			else
 			{
-				Console.WriteLine("Use the arguments to manipulate the Auto Start Apps.");
+				//Variable to control the user interation loop.
+				bool KeepLoop = true;
+
+				//Will work like a "pointer" to the working profile.
+				Profile profile = null;
+
+                do
+				{
+					//Presentation
+					Console.WriteLine("Auto Start Apps\n=========================================");
+					Console.WriteLine("Autores: Matheus Lopes Silvati | RA: 4200872\nCaroline Paganelli Corrêa dos Santos | RA: 4200890");
+					Console.WriteLine("Professor: Wesley Pecoraro");
+					Console.WriteLine("Curso: Engenharia de Computação | Período: 6º - Noturno");
+					Console.WriteLine("Disciplina: P.I.M. - IV");
+					Console.WriteLine("=========================================");
+					Console.WriteLine("Auto Start Apps: Interactive Mode");
+
+					//Inform the selected profile.
+					Console.WriteLine("\n======================================\nProfile selected: {0}\n======================================\n", AppCfg.GetProfileFocus());
+
+					//Get the command from the user
+					Console.Write("Enter with a command: ");
+					string UserEntry = Console.ReadLine();
+
+                    switch (UserEntry.ToLower())
+                    {
+						case "getprofile":	//Select the profile to work.
+                        {
+								Console.Write("Enter with the Profile Name to select: ");
+								string ProfileName = Console.ReadLine();
+
+								AppCfg.SetProfileStatus(AuxiliarProfileManager.ChkProfile(ProfileName));
+								AppCfg.SetProfileFocus(ProfileName);
+
+							break;
+                        }
+						case "listprofiles":	//List all profiles available.
+                        {
+							string[] ProfileList = AuxiliarProfileManager.GetProfiles();
+							Console.WriteLine("List of profiles available\n======================================");
+                            foreach (var item in ProfileList)
+                            {
+								Console.WriteLine(item);
+                            }
+							Console.WriteLine("======================================\n");
+							break;
+                        }
+						case "newprofile":		//Create a new profile.
+                        {
+							Console.Write("Enter with a name for new profile: ");
+							string NewProfileName = Console.ReadLine();
+
+							bool NewProfileStatus = AuxiliarProfileManager.ChkProfile(NewProfileName);
+
+							if (AppCfg.GetAndTestPassword())
+							{
+								if (!NewProfileStatus)
+								{
+									profile = new Profile(NewProfileName);
+									AppCfg.SetProfileFocus(NewProfileName);
+									AppCfg.SetProfileStatus(true);
+								}
+								else
+								{
+									Console.WriteLine("Error: Already have a profile with this name.");
+								}
+							}
+							break;
+                        }
+						case "remprofile":	//Remove a profile.
+                        {
+							Console.Write("Enter with the profile to remove: ");
+							string RemoveProfile = Console.ReadLine();
+
+							if (AppCfg.GetAndTestPassword())
+							{
+								int RemoveReturn = AuxiliarProfileManager.RemoveProfile(RemoveProfile);
+
+								if (RemoveProfile == AppCfg.GetProfileFocus())
+								{
+									AppCfg.SetProfileFocus(null);
+								}
+
+								if (RemoveReturn == 0)
+								{
+									Console.WriteLine("Profile removed with success.");
+								}
+								else if (RemoveReturn == -1)
+								{
+									Console.WriteLine("Fail to remove the profile container.");
+								}
+								else if (RemoveReturn == -2)
+								{
+									Console.WriteLine("The path to the profile dosn't exist.");
+								}
+								else
+								{
+									Console.WriteLine("Profile Repository dosn't exist.");
+								}
+							}
+							break;
+                        }
+						case "addapp":	//Adds a new app to profile.
+                        {
+							if (AppCfg.GetProfileStatus(true))
+							{
+								if (AppCfg.GetProfileStatus(true))
+								{
+									Console.WriteLine("Initialization size: {0}", profile.GetInitSize());
+									Console.Write("Enter with the number of additions wil do: ");
+									string SizeStr = Console.ReadLine();
+
+									if(int.TryParse(SizeStr, out _))
+                                    {
+										int Entries = int.Parse(SizeStr);
+
+										UserInterations.GetAppEntriesTUI(ref profile, ref Entries, true);
+
+										profile.SaveProfile();
+                                    }
+									else
+                                    {
+										Console.WriteLine("Fail to receave the size.");
+                                    }
+								}
+							}
+							break;
+                        }
+						case "remapp":	//Remove a app from the profile.
+                        {
+							if (AppCfg.GetProfileStatus(true))
+							{
+								if (AppCfg.GetProfileStatus(true))
+								{
+									Console.Write("Enter with the program's name to remove: ");
+									string RemoveProgramName = Console.ReadLine();
+
+									string profileStr = AppCfg.GetProfileFocus();
+									UserInterations.RemAppInteraction(ref profileStr, ref RemoveProgramName);
+
+									profile.LoadProfile();
+								}
+							}
+							break;
+                        }
+						case "listapps":	//List all apps in initialization's profile.
+                        {
+							string[] StartList = profile.ListStart();
+							Console.WriteLine("Apps in start list:\n");
+                            foreach (var item in StartList)
+                            {
+								Console.WriteLine(item);
+                            }
+							break;
+                        }
+						case "configadmin":	//Config admin pass.
+                        {
+							if (AppCfg.GetAndTestPassword())
+							{
+								int CmdLineWeight = 384;
+								bool CmdLineOk = true;
+								UserFunctions.AdminConfigF(ref AppCfg, ref args, ref CmdLineOk, ref CmdLineWeight);
+							}
+							break;
+                        }
+						case "startapps":	//Start the apps in profile.
+                        {
+							if (AppCfg.GetProfileStatus(true))
+							{
+								if (AppCfg.GetProfileStatus(true))
+								{
+									profile.LoadProfile();
+									profile.SaveProfile();
+								}
+							}
+							break;
+                        }
+						case "help":		//Show the help.
+                        {
+							string[] HelpCommands =
+							{
+								"Help Console Command:",
+								"===========================================================\n",
+								"GetProfile - Selects a profile to work.",
+								"ListProfiles - List all profiles for current user.",
+								"NewProfile - Creates a new profile.",
+								"RemProfile - Removes a profile.",
+								"AddApp - Adds a new application to initialization list.",
+								"RemApp - Removes an application from a profile.",
+								"ConfigAdmin - Configurate a administrator password.",
+								"StartApps - Start apps registered in a profile.",
+								"Exit - Close this application."
+                            };
+
+                            foreach (var item in HelpCommands)
+                            {
+								Console.WriteLine(item);
+                            }
+							break;
+                        }
+						case "exit":		//Exit the app.
+                        {
+							KeepLoop = false;
+							break;
+                        }
+                        default:
+						{
+							Console.WriteLine("Command not recognized! Try again.");
+							break;
+						}
+                    }
+
+					//Wait for user to continue and give time to read all information in buffer.
+					Console.Write("Press any key to continue...");
+					_ = Console.ReadLine();
+
+					//Clean the buffer to keep organized.
+					Console.Clear();
+                }
+				while (KeepLoop);
 			}
 		}
 	}
