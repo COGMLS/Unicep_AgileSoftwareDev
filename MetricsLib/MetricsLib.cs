@@ -26,10 +26,29 @@ namespace MetricsLib
 				//Creates a float array and converts the strings to floating points.
 				float[] MetricsF = new float[MetricsTemp.Length];
 
+				int j = 0;
 				for (int i = 0; i < MetricsTemp.Length; i++)
 				{
-					MetricsF[i] = float.Parse(MetricsTemp[i]);
+					//Verify if it's possible convert string to float.
+					if (float.TryParse(MetricsTemp[i], out _))
+					{
+						MetricsF[j] = float.Parse(MetricsTemp[i]);
+						j++;
+					}
 				}
+
+				//Adaptates the Metrics Float to right size, in case some line in MetricsTemp was avoided.
+				if((j + 1) != MetricsTemp.Length)
+                {
+					float[] MetricsF2 = new float[j];
+
+					for(int i = 0; i < j; i++)
+                    {
+						MetricsF2[i] = MetricsF[i];
+                    }
+
+					return MetricsF2;
+                }
 
 				return MetricsF;
 			}
