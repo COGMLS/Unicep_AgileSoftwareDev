@@ -30,6 +30,11 @@ namespace ProfilesLib
 			}
 		}
 
+		public static bool ChkProfile(string ProfileName)
+        {
+			return Directory.Exists(LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileName + ProfileFolderExt);
+        }
+
 		//Get the Enumerated profiles available.
 		public static string[] GetProfiles()
 		{
@@ -61,7 +66,7 @@ namespace ProfilesLib
 		}
 
 		//Verify the profiles available
-		public static string[] GetProfilesList(string Path)
+		private static string[] GetProfilesList(string Path)
 		{
 			//Verify if Profile directory exist.
 			if (Directory.Exists(Path))
@@ -161,6 +166,8 @@ namespace ProfilesLib
                     try
                     {
 						Directory.CreateDirectory(ProfileFinalPath);
+						Directory.CreateDirectory(ProfileFinalPath + "\\" + ProfileInternal_Estatistics);
+						Directory.CreateDirectory(ProfileFinalPath + "\\" + ProfileInternal_Init);
 						return 0;		//Profile created with success.
                     }
                     catch (Exception e)
@@ -204,5 +211,34 @@ namespace ProfilesLib
 				return -2;  //The path to the profile dosn't exist.
 			}	
 		}
+
+		public static int RemoveAppFromProfile(string ProfileName, string ProgramName)
+        {
+			if (!ProfileBaseDirExist())
+			{
+				return -3;      //Profile Repository dosn't exist.
+			}
+			else
+			{
+				string ProfileFinalPath = LocalAppDataEnv + "\\" + AutoStartAppsBase + "\\" + ProfilesBase + "\\" + ProfileName + ProfileFolderExt;
+				if (Directory.Exists(ProfileFinalPath))
+				{
+					try
+					{
+						File.Delete(ProfileFinalPath + "\\" + ProfileInternal_Init + "\\" + ProfileName);
+						File.Delete(ProfileFinalPath + "\\" + ProfileInternal_Estatistics + "\\" + ProfileName);
+						return 0;       //Files removed with success.
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.Message);
+						return -1;      //Fail to remove the files.
+						throw;
+					}
+
+				}
+				return -2;  //The path to the profile dosn't exist.
+			}
+        }
 	}
 }
