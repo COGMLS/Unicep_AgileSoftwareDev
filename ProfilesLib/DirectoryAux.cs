@@ -1,4 +1,28 @@
-﻿using System;
+﻿/********************************************************************
+ * Project: User Path Converter for Unix and Windows systems
+ * ******************************************************************
+ * Author: Matheus L. Silvati
+ * ***********************************
+ * Version: 1.5
+ * ***********************************
+ * First Release Date: 2021/06/15
+ * Last Release Date: 2021/08/20
+ * ***********************************
+ * All rights reserved
+ * ******************************************************************
+ * OBS: This lib. has some functions to make more simple for console
+ * .NET applications when is used path in user interactions, including
+ * relative paths.
+ */
+
+/**********************************************
+ * NOTE: this lib is imported to this project.
+ * This library dosn't belong to any specific
+ * project.
+ * ********************************************
+ */
+
+using System;
 using System.IO;
 
 /* DirectoryAux namespace for treatment classes */
