@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Program.cs~RF68a7735.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AutoStartLib\AutoStartLib.csproj" />
     <ProjectReference Include="..\ConfigLib\ConfigLib.csproj" />
     <ProjectReference Include="..\ProfilesLib\ProfilesLib.csproj" />

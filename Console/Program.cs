@@ -46,119 +46,147 @@ namespace AutoStartupConsole
 				int CmdLineWeight = CliClass.VerifyCmdLine(ref args);
 				bool CmdLineOk = CliClass.IsCmdLineOk(CmdLineWeight, AppCfg.IsAdminPassSetted());
 
-                switch (CmdLineWeight)
-                {
-                    case 1:			//Load profile
+				if (CliClass.IsCommandHelp(ref args))
+				{
+					string[] HelpCommands =
 					{
-						UserFunctions.LoadProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
-						break;
-					}
-					case 2:			//NewProfile without AdminPass
+						"Command Line Help (Activated by -? -h --help):",
+						"===========================================================",
+						"All comands, except --RemApp use the sintax --Command <Value>",
+						"To use --RemApp, use the sintax: --RemApp ProfileName,ProgramName",
+						"===========================================================\n",
+						"--LoadProfile - Load profile (for all users)",
+						"--NewProfile - Create a new profile (needs --AdminPass)",
+						"--RemoveProfile - Remove and delete a profile (needs --AdminPass)",
+						"--ListProfiles - List the profiles available for the user account (for all users)",
+						"--Add2Profile - Adds a new application to start initialization list (needs --AdminPass)",
+						"--RemApp - Removes a application registered in a profile (needs --AdminPass)",
+						"--AddCsv2Profile - Adds a CSV file with each line as a app entry to add in init. list. The sequence of values needs be ProgramName, CmdLine, Args, WaitTime, WorkingDir*, Priority2Start, WindowStyle",
+						"--AdminConfig - Changes the AdminPass, if AdminPass isn't setted, the AdminPass will be avoided (needs --AdminPass)",
+						"--AdminPass - Administrator Password"
+					};
+
+					foreach (var item in HelpCommands)
 					{
-						UserFunctions.NewProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
-						break;
+						Console.WriteLine(item);
 					}
-					case 4:			//Remove profile without AdminPass
+				}
+				else
+				{
+					switch (CmdLineWeight)
 					{
-						UserFunctions.RemoveProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
-						break;
-					}
-					case 8:         //List Profile
-					{
-						UserFunctions.ListProfilesF();
-						break;
-					}
-					case 16:        //Add2Profile (Ok if dosn't have a password setted)
-					{
-						UserFunctions.Add2ProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
-						break;
-					}
-					case 32:		//RemApp (Ok if dosn't have a password setted)
-                    {
-							UserFunctions.RemAppF(ref args, ref CmdLineOk, ref CmdLineWeight);
+						case 1:         //Load profile
+						{
+							UserFunctions.LoadProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
 							break;
-                    }
-					case 64:        //AddCsv2Profile (Ok if dosn't have a password setted)
-					{
-						UserFunctions.AddCsv2Profile(ref args, ref CmdLineOk, ref CmdLineWeight);
-						break;
-					}
-					case 258:       //--NewProfile --AdminPass
-					{
-						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+						}
+						case 2:         //NewProfile without AdminPass
 						{
 							UserFunctions.NewProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							break;
 						}
-						else
-						{
-							Console.WriteLine("Password not approved!");
-						}
-						break;
-					}
-					case 260:       //--RemoveProfile --AdminPass
-					{
-						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+						case 4:         //Remove profile without AdminPass
 						{
 							UserFunctions.RemoveProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							break;
 						}
-						else
+						case 8:         //List Profile
 						{
-							Console.WriteLine("Password not approved!");
+							UserFunctions.ListProfilesF();
+							break;
 						}
-						break;
-					}
-					case 272:       //--Add2Profile --AdminPass
-					{
-						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+						case 16:        //Add2Profile (Ok if dosn't have a password setted)
 						{
 							UserFunctions.Add2ProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
-						}
-						else
-						{
-							Console.WriteLine("Password not approved!");
-						}
 							break;
-					}
-					case 288:       //--RemApp --AdminPass
-                    {
-						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+						}
+						case 32:        //RemApp (Ok if dosn't have a password setted)
 						{
 							UserFunctions.RemAppF(ref args, ref CmdLineOk, ref CmdLineWeight);
-						}
-						else
-						{
-							Console.WriteLine("Password not approved!");
-						}
 							break;
-                    }
-					case 320:       //--AddCsv2Profile --AdminPass
-					{
-						if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+						}
+						case 64:        //AddCsv2Profile (Ok if dosn't have a password setted)
 						{
 							UserFunctions.AddCsv2Profile(ref args, ref CmdLineOk, ref CmdLineWeight);
+							break;
 						}
-						else
+						case 258:       //--NewProfile --AdminPass
 						{
-							Console.WriteLine("Password not approved!");
+							if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+							{
+								UserFunctions.NewProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							}
+							else
+							{
+								Console.WriteLine("Password not approved!");
+							}
+							break;
 						}
-						break;
-					}
-					case 384:       //--AdminConfig --AdminPass
-					{
-						UserFunctions.AdminConfigF(ref AppCfg, ref args, ref CmdLineOk, ref CmdLineWeight);
-						break;
-					}
-					default:
-                    {
-						Console.WriteLine("Some arguments are invalid!");
-						Console.WriteLine("Arguments used:\n");
-						for (int i = 0; i < args.Length; i++)
+						case 260:       //--RemoveProfile --AdminPass
 						{
-							Console.WriteLine(args[i]);
+							if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+							{
+								UserFunctions.RemoveProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							}
+							else
+							{
+								Console.WriteLine("Password not approved!");
+							}
+							break;
 						}
-						break;
-                    }
-                }
+						case 272:       //--Add2Profile --AdminPass
+						{
+							if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+							{
+								UserFunctions.Add2ProfileF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							}
+							else
+							{
+								Console.WriteLine("Password not approved!");
+							}
+							break;
+						}
+						case 288:       //--RemApp --AdminPass
+						{
+							if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+							{
+								UserFunctions.RemAppF(ref args, ref CmdLineOk, ref CmdLineWeight);
+							}
+							else
+							{
+								Console.WriteLine("Password not approved!");
+							}
+							break;
+						}
+						case 320:       //--AddCsv2Profile --AdminPass
+						{
+							if (AppCfg.ApprovedAdminPass(CliClass.GetClValue(ref args, CliClass.CommandLineAvailable.ADMINPASS, ref CmdLineOk, ref CmdLineWeight)))
+							{
+								UserFunctions.AddCsv2Profile(ref args, ref CmdLineOk, ref CmdLineWeight);
+							}
+							else
+							{
+								Console.WriteLine("Password not approved!");
+							}
+							break;
+						}
+						case 384:       //--AdminConfig --AdminPass
+						{
+							UserFunctions.AdminConfigF(ref AppCfg, ref args, ref CmdLineOk, ref CmdLineWeight);
+							break;
+						}
+						default:
+						{
+							Console.WriteLine("Some arguments are invalid!");
+							Console.WriteLine("Arguments used:\n");
+							for (int i = 0; i < args.Length; i++)
+							{
+								Console.WriteLine(args[i]);
+							}
+							break;
+						}
+					}
+				}
 			}
 			else
 			{
