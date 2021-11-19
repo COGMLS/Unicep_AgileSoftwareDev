@@ -248,9 +248,9 @@ namespace ProfilesLib
 		}
 
 		//Set the Initialization size
-		public void SetInitSize(int NewSize)
+		public int SetInitSize(int NewSize)
         {
-			_ = this.ProfileInitList.SetInitSize(NewSize);
+			return this.ProfileInitList.SetInitSize(NewSize);
         }
 
 		//Get the Initialization size
@@ -273,6 +273,26 @@ namespace ProfilesLib
 				_ = ProfileInitList.Add2Init(ProgramName, CmdLine, Args, WaitTime, WorkingDir, Priority, windowStyle);
 			}
 		}
+
+		//Remove a application from start list
+		public int RemAppStartList(string ProgramName)
+        {
+			return ProfileInitList.RemAppStartList(ProgramName);
+        }
+
+		//List all applications registered in start list
+		public string[] ListStart()
+        {
+			if(this.ProfileInitList != null)
+            {
+				if(this.ProfileInitList.GetInitSize() > 0)
+                {
+					return this.ProfileInitList.ExpObjList();
+                }
+            }
+
+			return null;
+        }
 
 		//Start applications:
 		public void StartAppList()
