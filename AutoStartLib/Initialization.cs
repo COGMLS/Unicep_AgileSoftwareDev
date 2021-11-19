@@ -286,6 +286,38 @@ namespace AutoStartLib
 			return ExportList;
 		}
 
+		//Remove application from the start list
+		public int RemAppStartList(string ProgramName)
+        {
+			StartApp[] temp = new StartApp[this.HStartList.Length - 1];
+
+			bool AppRemoved = false;
+
+			for(int i = 0; i < this.HStartList.Length; i++)
+            {
+				for(int j = 0; j < temp.Length; )
+                {
+					if(!(this.HStartList[i].GetProgramName().ToLower() == ProgramName.ToLower()))
+                    {
+						temp[j] = this.HStartList[i];
+						j++;
+                    }
+					else
+                    {
+						AppRemoved = true;
+                    }
+                }
+            }
+
+			if(AppRemoved)
+            {
+				this.HStartList = temp;
+				return 0;
+            }
+
+			return -1;
+        }
+
 		//Start the object
 		public int StartObj(int Index)
         {
