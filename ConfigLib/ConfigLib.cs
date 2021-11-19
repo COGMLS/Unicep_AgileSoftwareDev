@@ -14,18 +14,13 @@ namespace ConfigLib
 		//
 		//Private variables for configurate the program
 		//
-		bool IsAdminPass;
-		bool IsAdd2ProfileCl;
-		bool IsAddCsv2ProfileCl;
-		bool IsLoadProfile;
-		bool IsNewProfile;
-		bool IsRemoveProfile;
-		bool IsListProfile;
+		private bool IsProfileSelected = false;
+		private string ProfileFocus = null;
 
 		//
 		//Public vaiables to define the program configurations:
 		//
-		string ProfileFocus = null;
+		
 
 		//Contructor for ConfigLib
 		public Config()
@@ -45,46 +40,20 @@ namespace ConfigLib
 		// Setters to define the current configurantion is used in actual instance.
 		//
 
-		//Define is Add2Profile var
-		public void SetAdd2ProfileControl(bool value)
-        {
-			this.IsAdd2ProfileCl = value;
-        }
-
-		//Define is AddCsv2Profile var
-		public void SetAddCsv2ProfileControl(bool value)
-        {
-			this.IsAddCsv2ProfileCl = value;
-        }
-
-		//Define is LoadProfile var
-		public void SetLoadProfile(bool value)
-		{
-			this.IsLoadProfile = value;
-		}
-
-		//Define is NewProfile var
-		public void SetNewProfile(bool value)
-		{
-			this.IsNewProfile = value;
-		}
-
-		//Define is RemoveProfile var
-		public void SetRemoveProfile(bool value)
-		{
-			this.IsRemoveProfile = value;
-		}
-
-		//Define is ListProfile var
-		public void SetListProfile(bool value)
-		{
-			this.IsListProfile = value;
-		}
-
 		//Define the profile focus to work
 		public void SetProfileFocus(string ProfileName)
         {
+			if(ProfileName == null)
+            {
+				this.IsProfileSelected = false;
+            }
+
 			this.ProfileFocus = ProfileName;
+        }
+
+		public void SetProfileStatus(bool ProfileStatus)
+        {
+			this.IsProfileSelected = ProfileStatus;
         }
 
 		//
@@ -94,7 +63,24 @@ namespace ConfigLib
 		//Shows the focused profile
 		public string GetProfileFocus()
         {
+			if(this.ProfileFocus == null)
+            {
+				return "NONE PROFILE SELECTED";
+            }
 			return this.ProfileFocus;
+        }
+
+		//Show if has a profile selected.
+		public bool GetProfileStatus(bool ShowWarningMessage = false)
+        {
+			if(ShowWarningMessage)
+            {
+				if(!this.IsProfileSelected)
+                {
+					Console.WriteLine("\nNO PROFILE SELECTED!\n");
+                }
+            }
+			return this.IsProfileSelected;
         }
 	}
 }
