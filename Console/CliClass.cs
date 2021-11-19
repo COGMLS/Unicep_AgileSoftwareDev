@@ -121,6 +121,31 @@ namespace AutoStartupConsole
 			return 0;
 		}
 
+		//Verify if the command line has the --help -h or -? argument
+		public static bool IsCommandHelp(ref string[] Args)
+        {
+			for (int i = 0; i < Args.Length; i++)
+			{
+				if (Args[i].ToLower() == "--help")
+				{
+					return true;
+				}
+				else if (Args[i].ToLower() == "-help")
+				{
+					return true;
+				}
+				else if (Args[i].ToLower() == "-?")
+                {
+					return true;
+                }
+				else if(Args[i].ToLower() == "-h")
+                {
+					return true;
+                }
+            }
+			return false;
+        }
+
 		//Verify the command line and attributes the weights for each parameter that are present
 		public static int VerifyCmdLine(ref string[] Args)
         {
