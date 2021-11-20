@@ -211,7 +211,7 @@ namespace AutoStartupConsole
 					Console.WriteLine("\n======================================\nProfile selected: {0}\n======================================\n", AppCfg.GetProfileFocus());
 
 					//Get the command from the user
-					Console.Write("Enter with a command: ");
+					Console.Write("Enter with a command (help for more information): ");
 					string UserEntry = Console.ReadLine();
 
                     switch (UserEntry.ToLower())
