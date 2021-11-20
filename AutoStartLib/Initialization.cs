@@ -9,7 +9,8 @@ namespace AutoStartLib
 	public class InitializationList
 	{
 		//Handle to a Initialization list:
-		private StartApp[] HStartList = null;
+		//private StartApp[] HStartList = null;
+		private List<StartApp> HStartList;
 
 		//Index in use:
 		private int HStartIndex;
@@ -18,14 +19,12 @@ namespace AutoStartLib
 		private int MaxSimultaneousInit = 0;	//Reserved for a future update to support multithreading.
 
 		//Constructors:
-		public InitializationList(int itens)
+		public InitializationList()
 		{
-			this.HStartList = new StartApp[itens];
 			this.HStartIndex = -1;	//No elements in use.
 		}
-		public InitializationList(int itens, int SimInit)
+		public InitializationList(int SimInit)
 		{
-			this.HStartList = new StartApp[itens];
 			this.MaxSimultaneousInit = SimInit;
 			this.HStartIndex = -1;	//No elements in use.
 		}
@@ -33,56 +32,16 @@ namespace AutoStartLib
 		//Size mng functions
 		public int GetInitSize()
 		{
-			return this.HStartList.Length;
+			if(this.HStartList == null)
+            {
+				return 0;
+            }
+			return this.HStartList.Count;
 		}
 		public int GetInitIndexPos()
         {
 			return this.HStartIndex;
         }
-
-		//Define a new size for the Initialization List.
-		public int SetInitSize(int newSize)
-		{
-			StartApp[] temp = null;
-
-			if (newSize > 0)
-			{
-				if (newSize > this.HStartList.Length)		//Add more space in the list.
-				{
-					temp = new StartApp[newSize];
-
-					for (int i = 0; i < this.HStartList.Length; i++)
-					{
-						temp[i] = this.HStartList[i];
-					}
-
-					this.HStartList = temp;
-
-					return 0;
-				}
-				else if (newSize < this.HStartList.Length)	//Remove space in the list. Any content will be deleted.
-				{
-					temp = new StartApp[newSize];
-
-					for(int i = 0; i < temp.Length; i++)
-					{
-						temp[i] = this.HStartList[i];
-					}
-
-					this.HStartList = temp;
-
-					return 0;
-				}
-				else
-				{
-					return 1;	//Keep size unchanged.
-				}
-			}
-			else
-			{
-				return -1;		//An invalid number was sended.
-			}
-		}
 
 		//Organize List by Priority
 		private void SortList()
@@ -96,132 +55,38 @@ namespace AutoStartLib
 			this.SortList();
         }
 
-		//[DEPRECATED]Save Init List:
-		public int SaveInitList()
-        {
-			return 0;
-        }
-
 		//Add a object to initialyze:
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime = 0, string ProfileContainer = null)
-		{
-			if (this.HStartIndex + 1 < this.HStartList.Length)
-			{
-				//Set the ProfileContainer path for metrics loading files
-				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
-
-				//Atribute the configurations for the object
-				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
-				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
-				this.HStartList[this.HStartIndex + 1].SetArgs(args);
-				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
-				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
-				this.HStartList[this.HStartIndex + 1].SetStartPriority(CommonTypes.StartPriority.NORMAL);
-
-				//Set the actual index (HStartIndex + 1) as used
-				this.HStartIndex++;
-
-				return 0;
-			}
-			else
-            {
-				return -1;
-            }
-		}
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, string ProfileContainer = null)
-		{
-			if (this.HStartIndex + 1 < this.HStartList.Length)
-			{
-				//Set the ProfileContainer path for metrics loading files
-				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
-
-				//Atribute the configurations for the object
-				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
-				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
-				this.HStartList[this.HStartIndex + 1].SetArgs(args);
-				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
-				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
-				this.HStartList[this.HStartIndex + 1].SetStartPriority(CommonTypes.StartPriority.NORMAL);
-				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
-
-				//Set the actual index (HStartIndex + 1) as used
-				this.HStartIndex++;
-
-				return 0;
-			}
-			else
-            {
-				return -1;
-            }
-		}
-		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, string ProfileContainer = null)
-		{
-			if (this.HStartIndex + 1 < this.HStartList.Length)
-			{
-				//Set the ProfileContainer path for metrics loading files
-				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
-
-				//Atribute the configurations for the object
-				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
-				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
-				this.HStartList[this.HStartIndex + 1].SetArgs(args);
-				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
-				this.HStartList[this.HStartIndex + 1].SetWindowStyle(StartWindowStyle.NORMAL);
-				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
-				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
-
-				//Set the actual index (HStartIndex + 1) as used
-				this.HStartIndex++;
-
-				return 0;
-			}
-			else
-            {
-				return -1;
-            }
-		}
 		public int Add2Init(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, StartWindowStyle windowStyle, string ProfileContainer = null)
 		{
-			if (this.HStartIndex + 1 < this.HStartList.Length)
+			if (GetInitSize() > 0)
 			{
-				//Set the ProfileContainer path for metrics loading files
-				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
-
 				//Atribute the configurations for the object
-				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
-				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
-				this.HStartList[this.HStartIndex + 1].SetArgs(args);
-				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
-				this.HStartList[this.HStartIndex + 1].SetWindowStyle(windowStyle);
-				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
-				this.HStartList[this.HStartIndex + 1].SetWorkingDir(workingDir);
+				StartApp temp = new StartApp(programName, cmdLine, args, waitTime, workingDir, priority, windowStyle);
+				//Set the ProfileContainer path for metrics loading files
+				temp.SetProfileContainer(ProfileContainer);
 
-				//Set the actual index (HStartIndex + 1) as used
+				this.HStartList.Add(temp);
+
 				this.HStartIndex++;
 
 				return 0;
 			}
 			else
-            {
+			{
 				return -1;
-            }
+			}
 		}
 		public int Add2Init(string programName, string cmdLine, string args, int waitTime, CommonTypes.StartPriority priority, StartWindowStyle windowStyle, string ProfileContainer = null)
 		{
-			if (this.HStartIndex + 1 < this.HStartList.Length)
+			if (GetInitSize() > 0)
 			{
-				//Set the ProfileContainer path for metrics loading files
-				this.HStartList[this.HStartIndex + 1].SetProfileContainer(ProfileContainer);
-
 				//Atribute the configurations for the object
-				this.HStartList[this.HStartIndex + 1].SetProgramName(programName);
-				this.HStartList[this.HStartIndex + 1].SetCmdLine(cmdLine);
-				this.HStartList[this.HStartIndex + 1].SetArgs(args);
-				this.HStartList[this.HStartIndex + 1].SetWaitTime(waitTime);
-				this.HStartList[this.HStartIndex + 1].SetWindowStyle(windowStyle);
-				this.HStartList[this.HStartIndex + 1].SetStartPriority(priority);
+				StartApp temp = new StartApp(programName, cmdLine, args, waitTime, priority, windowStyle);
+				//Set the ProfileContainer path for metrics loading files
+				temp.SetProfileContainer(ProfileContainer);
 
-				//Set the actual index (HStartIndex + 1) as used
+				this.HStartList.Add(temp);
+
 				this.HStartIndex++;
 
 				return 0;
@@ -289,30 +154,13 @@ namespace AutoStartLib
 		//Remove application from the start list
 		public int RemAppStartList(string ProgramName)
         {
-			StartApp[] temp = new StartApp[this.HStartList.Length - 1];
-
-			bool AppRemoved = false;
-
-			for(int i = 0; i < this.HStartList.Length; i++)
+			for(int i = 0; i < GetInitSize(); i++)
             {
-				for(int j = 0; j < temp.Length; )
+				if(this.HStartList[i].GetProgramName().ToLower() == ProgramName.ToLower())
                 {
-					if(!(this.HStartList[i].GetProgramName().ToLower() == ProgramName.ToLower()))
-                    {
-						temp[j] = this.HStartList[i];
-						j++;
-                    }
-					else
-                    {
-						AppRemoved = true;
-                    }
+					this.HStartList.RemoveAt(i);
+					return 0;
                 }
-            }
-
-			if(AppRemoved)
-            {
-				this.HStartList = temp;
-				return 0;
             }
 
 			return -1;

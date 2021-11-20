@@ -47,9 +47,17 @@ namespace ProfilesLib
 		}
 
 		//Load and treat correctly the StartWindowStyle Enum value
-		public static StartWindowStyle LoadConfigWinStyle(ConfigTags CfgTag, ref string ConfigString)
+		public static StartWindowStyle LoadConfigWinStyle(ConfigTags CfgTag, ref string ConfigString, bool IsCmdLine = true)
 		{
-			string t = ConfigString.Substring(ConfigNames[(int)CfgTag].Length);
+			string t = null;
+			if (IsCmdLine)
+			{
+				t = ConfigString.Substring(ConfigNames[(int)CfgTag].Length);
+			}
+			else
+            {
+				t = ConfigString;
+            }
 
 			if (t == "-1")
 			{
@@ -84,9 +92,17 @@ namespace ProfilesLib
 		}
 
 		//Load and treat correctly the StartPriority Enum value
-		public static CommonTypes.StartPriority LoadConfigPriority(ConfigTags CfgTag, ref string ConfigString)
+		public static CommonTypes.StartPriority LoadConfigPriority(ConfigTags CfgTag, ref string ConfigString, bool IsCmdLine = true)
 		{
-			string t = ConfigString.Substring(ConfigNames[(int)CfgTag].Length);
+			string t = null;
+			if (IsCmdLine)
+			{
+				t = ConfigString.Substring(ConfigNames[(int)CfgTag].Length);
+			}
+			else
+            {
+				t = ConfigString;
+            }
 
 			if (t == "0")
 			{

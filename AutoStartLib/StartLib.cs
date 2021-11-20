@@ -44,7 +44,7 @@ namespace AutoStartLib
 		ProcessStartInfo ObjProcess = null;
 
 		//Constructors:
-		StartApp()	//Empty constructor
+		public StartApp()	//Empty constructor
         {
 			this.ProgramName = null;
 			this.CmdLine = null;
@@ -58,55 +58,24 @@ namespace AutoStartLib
 
 			this.Priority = CommonTypes.StartPriority.NORMAL;
         }
-		StartApp(string programName, string cmdLine, string args, int waitTime)
+		public StartApp(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
 		{
 			this.ProgramName = programName;
 			this.CmdLine = cmdLine;
 			this.Args = args;
+			this.WorkingDir = workingDir;
 			this.WaitTime = waitTime;
-
-			this.windowStyle = StartWindowStyle.NORMAL;
-
-			this.Priority = CommonTypes.StartPriority.NORMAL;
-		}
-		StartApp(string programName, string cmdLine, string args, int waitTime, string workingDir)
-		{
-			this.ProgramName = programName;
-			this.CmdLine = cmdLine;
-			this.Args = args;
-			this.WorkingDir = workingDir;
-
-			this.windowStyle = StartWindowStyle.NORMAL;
-
-			this.Priority = CommonTypes.StartPriority.NORMAL;
-		}
-		StartApp(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority)
-		{
-			this.ProgramName = programName;
-			this.CmdLine = cmdLine;
-			this.Args = args;
-			this.WorkingDir = workingDir;
-
-			this.windowStyle = StartWindowStyle.NORMAL;
-
-			this.Priority = priority;
-		}
-		StartApp(string programName, string cmdLine, string args, int waitTime, string workingDir, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
-		{
-			this.ProgramName = programName;
-			this.CmdLine = cmdLine;
-			this.Args = args;
-			this.WorkingDir = workingDir;
 
 			this.windowStyle = windowStyle;
 
 			this.Priority = priority;
 		}
-		StartApp(string programName, string cmdLine, string args, int waitTime, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
+		public StartApp(string programName, string cmdLine, string args, int waitTime, CommonTypes.StartPriority priority, StartWindowStyle windowStyle)
 		{
 			this.ProgramName = programName;
 			this.CmdLine = cmdLine;
 			this.Args = args;
+			this.WaitTime = waitTime;
 
 			this.windowStyle = windowStyle;
 

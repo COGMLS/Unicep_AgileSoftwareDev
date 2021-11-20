@@ -137,8 +137,6 @@ namespace AutoStartupConsole
                     {
                         Profile profile = new Profile(ProfileName);
 
-                        profile.SetInitSize(profile.GetInitSize() + 1);
-
                         profile.Add2StartList(List.ProgramName, List.CmdLine, List.Args, List.WorkingDir, List.windowStyle, List.Priority, List.WaitTime);
                     }
                     else

@@ -158,7 +158,7 @@ namespace ProfilesLib
 			if (this.ProfileDirExist)
 			{
 				//Check if some old file isn't necessary any more
-				ChkSavFiles();
+				//ChkSavFiles();	Removed to avoid errors.
 
 				//Loop that start from 0 to the variable HStartIndex to avoid get null values, in cases with a empty objects.
 				for (int i = 0; i < this.ProfileInitList.GetInitSize(); i++)
@@ -176,6 +176,7 @@ namespace ProfilesLib
 					LoadedProgramConfigs = this.ProfileInitList.ExpObjInfo(i);
 
 					//Saves the object configuration's to a file with the program's name will be init.
+					File.Create(this.ProfileContainer + "\\" + this.ProfileInternal_Init + "\\" + LoadedProgramConfigs[0]);
 					File.WriteAllLines(this.ProfileContainer + "\\" + this.ProfileInternal_Init + "\\" + LoadedProgramConfigs[0], LoadedProgramConfigs);
 
 					//Save the metrics file:
@@ -196,7 +197,7 @@ namespace ProfilesLib
 			string[] NewInitFiles = this.ProfileInitList.ExpObjList();
 
 			//In case the list isn't empty.
-			if (OldInitFiles != null)
+			if (OldInitFiles.Length > 0)
 			{
 				for (int i = 0; i < OldInitFiles.Length; i++)
 				{
@@ -207,7 +208,7 @@ namespace ProfilesLib
 					for (int j = 0; j < NewInitFiles.Length; j++)
 					{
 						//In case to preserve the file, the old one will be overwrited.
-						if (OldInitFiles[i] == NewInitFiles[j])
+						if (NewInitFiles[j].Contains(OldInitFiles[i]))
 						{
 							WillDelete = false;
 							break;
@@ -234,11 +235,18 @@ namespace ProfilesLib
 		}
 
 		//Initialize init list
-		public int InitializeInitList(int Size)
+		public int InitializeInitList(int SimInit = 0)
 		{
 			if (this.ProfileInitList == null)
 			{
-				this.ProfileInitList = new InitializationList(Size);
+				if(SimInit == 0)
+                {
+					this.ProfileInitList = new InitializationList();
+                }
+				else
+                {
+					this.ProfileInitList = new InitializationList(SimInit);
+                }
 				return 0;
 			}
 			else
@@ -246,12 +254,6 @@ namespace ProfilesLib
 				return -1;
 			}
 		}
-
-		//Set the Initialization size
-		public int SetInitSize(int NewSize)
-        {
-			return this.ProfileInitList.SetInitSize(NewSize);
-        }
 
 		//Get the Initialization size
 		public int GetInitSize()
@@ -262,6 +264,10 @@ namespace ProfilesLib
 		//Adds a start entry
 		public void Add2StartList(string ProgramName, string CmdLine, string Args, string WorkingDir, StartWindowStyle windowStyle, CommonTypes.StartPriority Priority, int WaitTime)
         {
+			if(GetInitSize() == 0)
+            {
+				InitializeInitList();
+            }
 			//Add to the Initialization List:
 			//If the working directory is null
 			if (WorkingDir == null)

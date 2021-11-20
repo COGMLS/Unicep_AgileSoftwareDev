@@ -89,6 +89,7 @@ namespace MetricsLib
 				MetricsStringFile[i] = Metrics[i].ToString();
 			}
 
+			File.Create(MetricsDir + "\\" + ProgramName);
 			File.WriteAllLines(MetricsDir + "\\" + ProgramName, MetricsStringFile);
 		}
 

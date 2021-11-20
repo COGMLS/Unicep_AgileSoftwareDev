@@ -10,30 +10,11 @@ namespace AutoStartupConsole
 {
 	public static class UserInterations
 	{
-		public static void GetAppEntriesTUI(ref Profile profile, ref int Entries, bool IsFromConsoleInterration = false)
+		public static void GetAppEntriesTUI(ref Profile profile, ref int Entries)
 		{
-			_ = profile.InitializeInitList(Entries);
-			
-			if(IsFromConsoleInterration)
-            {
-				int Initreturn = profile.SetInitSize(Entries);
+			_ = profile.InitializeInitList();
 
-				if(Initreturn == 0)
-                {
-					Console.WriteLine("Initialization size changed with succefull!");
-                }
-				else if(Initreturn == 1)
-                {
-					Console.WriteLine("Keep size unchanged. Warning: This could overwrite some configurations!");
-                }
-				else if(Initreturn == -1)
-                {
-					Console.WriteLine("An invalid number was sended.");
-					return;		//Cancell the operation.
-                }
-            }
-
-			for (int i = 0; i < Entries && i < profile.GetInitSize();)
+			for (int i = 0; i < Entries;)
 			{
 				string ProgramName = null;
 				string CmdLine = null;
@@ -54,25 +35,33 @@ namespace AutoStartupConsole
 
 				Console.Write("Command Line: ");
 				CmdLine = Console.ReadLine();
-				Console.Write("Arguments: ");
+				Console.Write("Arguments (-1 to not use it): ");
 				Args = Console.ReadLine();
-				Console.Write("Working Directory (leave it null to not use it): ");
+				Console.Write("Working Directory (leave -1 to not use it): ");
 				WorkingDir = Console.ReadLine();
 
-				if (WorkingDir == "")
+				if (WorkingDir == "-1")
 				{
 					WorkingDir = null;
 				}
 
 				Console.Write("Window Style (-1 - No Window, 0 - Hide, 1 - Normal [Default], 2 - Minimized, 3 - Maximazed): ");
 				string winStyle = Console.ReadLine();
-				windowStyle = ProfileConfig.LoadConfigWinStyle(ProfileConfig.ConfigTags.WINDOWSTYLE, ref winStyle);
+				windowStyle = ProfileConfig.LoadConfigWinStyle(ProfileConfig.ConfigTags.WINDOWSTYLE, ref winStyle, false);
 				Console.Write("Priority to start (0 - Low, 1 - Normal, 2 - High): ");
 				string priority = Console.ReadLine();
-				Priority = ProfileConfig.LoadConfigPriority(ProfileConfig.ConfigTags.PRIORITY, ref priority);
+				Priority = ProfileConfig.LoadConfigPriority(ProfileConfig.ConfigTags.PRIORITY, ref priority, false);
 				Console.Write("Define the time to wait the initilization (seconds): ");
 				string time = Console.ReadLine();
-				_ = int.TryParse(time, out WaitTime);
+				
+				if(int.TryParse(time, out _))
+                {
+					WaitTime = int.Parse(time);
+                }
+				else
+                {
+					WaitTime = 0;
+                }
 
 				Console.Write("Confirm add to initilization list (y|n): ");
 				string Confirm = Console.ReadLine();

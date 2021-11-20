@@ -218,11 +218,30 @@ namespace AutoStartupConsole
                     {
 						case "getprofile":	//Select the profile to work.
                         {
-								Console.Write("Enter with the Profile Name to select: ");
-								string ProfileName = Console.ReadLine();
+							Console.Write("Enter with the Profile Name to select: ");
+							string ProfileName = Console.ReadLine();
 
-								AppCfg.SetProfileStatus(AuxiliarProfileManager.ChkProfile(ProfileName));
-								AppCfg.SetProfileFocus(ProfileName);
+							bool ProfileExist = AuxiliarProfileManager.ChkProfile(ProfileName);
+
+							profile = new Profile(ProfileName);
+
+							AppCfg.SetProfileStatus(ProfileExist);
+							AppCfg.SetProfileFocus(ProfileName);
+							int LoadReturnValue = profile.LoadProfile();
+
+							if (LoadReturnValue == 0)
+							{
+								Console.WriteLine("[INFO]::Profile loaded with success!");
+							}
+							else if (LoadReturnValue == -1)
+							{
+								Console.WriteLine("[INFO]::Profile loaded, but there are no files to be loaded.");
+							}
+							else if (LoadReturnValue == -2)
+							{
+								Console.WriteLine("[INFO]::Profile dosn't exist! Trying create one... Reload and try again.");
+								AppCfg.SetProfileFocus(null);
+							}
 
 							break;
                         }
@@ -230,9 +249,16 @@ namespace AutoStartupConsole
                         {
 							string[] ProfileList = AuxiliarProfileManager.GetProfiles();
 							Console.WriteLine("List of profiles available\n======================================");
-                            foreach (var item in ProfileList)
+							if (ProfileList != null)
+							{
+								foreach (var item in ProfileList)
+								{
+									Console.WriteLine(item);
+								}
+							}
+							else
                             {
-								Console.WriteLine(item);
+								Console.WriteLine("There are no profiles available!");
                             }
 							Console.WriteLine("======================================\n");
 							break;
@@ -298,15 +324,25 @@ namespace AutoStartupConsole
 							{
 								if (AppCfg.GetProfileStatus(true))
 								{
-									Console.WriteLine("Initialization size: {0}", profile.GetInitSize());
-									Console.Write("Enter with the number of additions wil do: ");
+									int LoadReturnValue = profile.LoadProfile();
+
+									if(LoadReturnValue == -1)
+                                    {
+										profile.InitializeInitList();
+                                    }
+									else
+                                    {
+										Console.WriteLine("Actual Initialization size: {0}", profile.GetInitSize());
+                                    }
+									
+									Console.Write("Enter with the number of additions will do: ");
 									string SizeStr = Console.ReadLine();
 
 									if(int.TryParse(SizeStr, out _))
                                     {
 										int Entries = int.Parse(SizeStr);
 
-										UserInterations.GetAppEntriesTUI(ref profile, ref Entries, true);
+										UserInterations.GetAppEntriesTUI(ref profile, ref Entries);
 
 										profile.SaveProfile();
                                     }
@@ -362,6 +398,7 @@ namespace AutoStartupConsole
 								if (AppCfg.GetProfileStatus(true))
 								{
 									profile.LoadProfile();
+									profile.StartAppList();
 									profile.SaveProfile();
 								}
 							}
